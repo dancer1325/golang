@@ -25,7 +25,7 @@
   * `-}}` — trims the — next leading whitespaces
 
 # Note
-* Check 'exampledoc_test.go' to comprehend the library
+* Check 'exampledoc_test.go' & 'golang-examples' repo to comprehend the library
 ## How to run it?
 * Problems:
   * Problem1: Any `go` command runs
