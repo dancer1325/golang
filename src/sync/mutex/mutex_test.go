@@ -4,7 +4,7 @@
 
 // GOMAXPROCS=10 go test
 
-package sync_test
+package mutex_test
 
 import (
 	"fmt"
