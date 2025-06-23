@@ -1,42 +1,44 @@
 # The Go Programming Language
 
-Go is an open source programming language that makes it easy to build simple,
-reliable, and efficient software.
+* Go
+  * programming language
+    * open source
+    * makes it easy to build
+      * simple
+      * reliable
+      * efficient software
 
 ![Gopher image](https://golang.org/doc/gopher/fiveyears.jpg)
 *Gopher image by [Renee French][rf], licensed under [Creative Commons 4.0 Attributions license][cc4-by].*
 
-Our canonical Git repository is located at https://go.googlesource.com/go.
-There is a mirror of the repository at https://github.com/golang/go.
+* [canonical Git repository](https://go.googlesource.com/go)
+  * == | Google repositories
 
-Unless otherwise noted, the Go source files are distributed under the
-BSD-style license found in the LICENSE file.
+* [mirror of the repository](https://github.com/golang/go)
 
 ### Download and Install
 
 #### Binary Distributions
 
-Official binary distributions are available at https://go.dev/dl/.
+* [here](https://go.dev/dl/) 
 
-After downloading a binary release, visit https://go.dev/doc/install
-for installation instructions.
+* [installation instructions](https://go.dev/doc/install)
 
-#### Install From Source
+#### Install -- from -- Source
 
-If a binary distribution is not available for your combination of
-operating system and architecture, visit
-https://go.dev/doc/install/source
-for source installation instructions.
+* [here](https://go.dev/doc/install/source)
+* uses
+  * binary distribution / NOT AVAILABLE -- for your -- OS
 
 ### Contributing
 
-Go is the work of thousands of contributors. We appreciate your help!
+* [here](https://go.dev/doc/contribute) 
 
-To contribute, please read the contribution guidelines at https://go.dev/doc/contribute.
-
-Note that the Go project uses the issue tracker for bug reports and
-proposals only. See https://go.dev/wiki/Questions for a list of
-places to ask questions about the Go language.
+* issue tracker 
+  * uses
+    * bug reports
+    * proposals
+* [places | ask questions](https://go.dev/wiki/Questions) 
 
 [rf]: https://reneefrench.blogspot.com/
 [cc4-by]: https://creativecommons.org/licenses/by/4.0/
