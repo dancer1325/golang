@@ -741,7 +741,7 @@ expressions</a>.
 </p>
 
 
-<h2 id="Variables">Variables</h2>
+# Variables
 
 <p>
 A variable is a storage location for holding a <i>value</i>.
@@ -749,7 +749,7 @@ The set of permissible values is determined by the
 variable's <i><a href="#Types">type</a></i>.
 </p>
 
-<p>
+* 
 A <a href="#Variable_declarations">variable declaration</a>
 or, for function parameters and results, the signature
 of a <a href="#Function_declarations">function declaration</a>
@@ -761,7 +761,7 @@ or taking the address of a <a href="#Composite_literals">composite literal</a>
 allocates storage for a variable at run time.
 Such an anonymous variable is referred to via a (possibly implicit)
 <a href="#Address_operators">pointer indirection</a>.
-</p>
+
 
 <p>
 <i>Structured</i> variables of <a href="#Array_types">array</a>, <a href="#Slice_types">slice</a>,
@@ -802,22 +802,19 @@ If a variable has not yet been assigned a value, its value is the
 
 # Types
 
-<p>
-A type determines a set of values together with operations and methods specific
-to those values. A type may be denoted by a <i>type name</i>, if it has one, which must be
-followed by <a href="#Instantiations">type arguments</a> if the type is generic.
-A type may also be specified using a <i>type literal</i>, which composes a type
-from existing types.
-</p>
+* type
+  * == 👀set of values together + operations + values' methods👀
 
-<pre class="ebnf">
+```
 Type      = TypeName [ TypeArgs ] | TypeLit | "(" Type ")" .
+  # if the type is generic -> specify [ TypeArgs ]
+  # TypeLit == type -- from -- EXISTING types
 TypeName  = identifier | QualifiedIdent .
 TypeArgs  = "[" TypeList [ "," ] "]" .
 TypeList  = Type { "," Type } .
 TypeLit   = ArrayType | StructType | PointerType | FunctionType | InterfaceType |
             SliceType | MapType | ChannelType .
-</pre>
+```
 
 <p>
 The language <a href="#Predeclared_identifiers">predeclares</a> certain type names.
@@ -899,7 +896,7 @@ are not the same type even though they may have the same size on a
 particular architecture.
 </p>
 
-<h3 id="String_types">String types</h3>
+## String types
 
 <p>
 A <i>string type</i> represents the set of string values.
@@ -923,7 +920,7 @@ string, <code>&amp;s[i]</code> is invalid.
 </p>
 
 
-<h3 id="Array_types">Array types</h3>
+## Array types
 
 <p>
 An array is a numbered sequence of elements of a single
@@ -981,7 +978,7 @@ type (
 )
 </pre>
 
-<h3 id="Slice_types">Slice types</h3>
+## Slice types
 
 <p>
 A slice is a descriptor for a contiguous segment of an <i>underlying array</i> and
@@ -1051,7 +1048,7 @@ however with slices of slices (or arrays of slices), the inner lengths may vary 
 Moreover, the inner slices must be initialized individually.
 </p>
 
-<h3 id="Struct_types">Struct types</h3>
+## Struct types
 
 <p>
 A struct is a sequence of named elements, called fields, each of which has a
@@ -1196,25 +1193,26 @@ type (
 )
 </pre>
 
-<h3 id="Pointer_types">Pointer types</h3>
+## Pointer types
 
-<p>
-A pointer type denotes the set of all pointers to <a href="#Variables">variables</a> of a given
-type, called the <i>base type</i> of the pointer.
-The value of an uninitialized pointer is <code>nil</code>.
-</p>
+* pointer type
+  * == ⭐️ALL pointers -- to -- given type's variables⭐️
+  * ❌if it's NOT initialized -> 's value == `nil`❌
+  * syntax
+    ```go
+    PointerType = "*" BaseType .
+    BaseType    = Type .
+    ```
+    * _Example:_
+      ```go
+      *Point
+      *[4]int
+      ```
 
-<pre class="ebnf">
-PointerType = "*" BaseType .
-BaseType    = Type .
-</pre>
+* pointer's base type
+  * := given type's variables
 
-<pre>
-*Point
-*[4]int
-</pre>
-
-<h3 id="Function_types">Function types</h3>
+## Function types
 
 <p>
 A function type denotes the set of all functions with the same parameter
@@ -1261,7 +1259,7 @@ func(int, int, float64) (float64, *[]int)
 func(n int) func(p *T)
 </pre>
 
-<h3 id="Interface_types">Interface types</h3>
+## Interface types
 
 <p>
 An interface type defines a <i>type set</i>.
@@ -1625,7 +1623,7 @@ A value of type <code>T</code> implements an interface if <code>T</code>
 implements the interface.
 </p>
 
-<h3 id="Map_types">Map types</h3>
+## Map types
 
 <p>
 A map is an unordered group of elements of one type, called the
@@ -1685,7 +1683,7 @@ A <code>nil</code> map is equivalent to an empty map except that no elements
 may be added.
 </p>
 
-<h3 id="Channel_types">Channel types</h3>
+## Channel types
 
 <p>
 A channel provides a mechanism for
