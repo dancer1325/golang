@@ -284,19 +284,19 @@ The following character sequences represent <a href="#Operators">operators</a>
      &amp;^          &amp;^=          ~
 </pre>
 
-<h3 id="Integer_literals">Integer literals</h3>
+## Integer literals
 
-<p>
-An integer literal is a sequence of digits representing an
-<a href="#Constants">integer constant</a>.
-An optional prefix sets a non-decimal base: <code>0b</code> or <code>0B</code>
-for binary, <code>0</code>, <code>0o</code>, or <code>0O</code> for octal,
-and <code>0x</code> or <code>0X</code> for hexadecimal
-[<a href="#Go_1.13">Go 1.13</a>].
-A single <code>0</code> is considered a decimal zero.
-In hexadecimal literals, letters <code>a</code> through <code>f</code>
-and <code>A</code> through <code>F</code> represent values 10 through 15.
-</p>
+* integer literal
+  * := sequence of digits / 
+    * == integer constant
+* 
+  An optional prefix sets a non-decimal base: <code>0b</code> or <code>0B</code>
+  for binary, <code>0</code>, <code>0o</code>, or <code>0O</code> for octal,
+  and <code>0x</code> or <code>0X</code> for hexadecimal
+  [<a href="#Go_1.13">Go 1.13</a>].
+  A single <code>0</code> is considered a decimal zero.
+  In hexadecimal literals, letters <code>a</code> through <code>f</code>
+  and <code>A</code> through <code>F</code> represent values 10 through 15.
 
 <p>
 For readability, an underscore character <code>_</code> may appear after
@@ -335,8 +335,7 @@ _42         // an identifier, not an integer literal
 0_xBadFace  // invalid: _ must separate successive digits
 </pre>
 
-
-<h3 id="Floating-point_literals">Floating-point literals</h3>
+## Floating-point literals
 
 <p>
 A floating-point literal is a decimal or hexadecimal representation of a
@@ -633,39 +632,41 @@ literal.
 </p>
 
 
-<h2 id="Constants">Constants</h2>
+# Constants
 
-<p>There are <i>boolean constants</i>,
-<i>rune constants</i>,
-<i>integer constants</i>,
-<i>floating-point constants</i>, <i>complex constants</i>,
-and <i>string constants</i>. Rune, integer, floating-point,
-and complex constants are
-collectively called <i>numeric constants</i>.
-</p>
+* types
+  * boolean constants
+  * numeric constants
+    * rune constants
+    * integer constants
+    * floating-point constants
+    * complex constants
+  * string constants
 
-<p>
-A constant value is represented by a
-<a href="#Rune_literals">rune</a>,
-<a href="#Integer_literals">integer</a>,
-<a href="#Floating-point_literals">floating-point</a>,
-<a href="#Imaginary_literals">imaginary</a>,
-or
-<a href="#String_literals">string</a> literal,
-an identifier denoting a constant,
-a <a href="#Constant_expressions">constant expression</a>,
-a <a href="#Conversions">conversion</a> with a result that is a constant, or
-the result value of some built-in functions such as
-<code>min</code> or <code>max</code> applied to constant arguments,
-<code>unsafe.Sizeof</code> applied to <a href="#Package_unsafe">certain values</a>,
-<code>cap</code> or <code>len</code> applied to
-<a href="#Length_and_capacity">some expressions</a>,
-<code>real</code> and <code>imag</code> applied to a complex constant
-and <code>complex</code> applied to numeric constants.
-The boolean truth values are represented by the predeclared constants
-<code>true</code> and <code>false</code>. The predeclared identifier
-<a href="#Iota">iota</a> denotes an integer constant.
-</p>
+* constant value
+  * types
+    * rune literal
+    * integer literal
+    * floating-point literal
+    * imaginary literal
+    * string literal
+    * identifier / == a constant
+    * constant expression
+    * conversion / 's result == constant
+    * built-in functions / 's result == constant
+      * _Example:_ 
+        * `min(someConstant)`
+        * `max(someConstant)`
+        * `unsafe.Sizeof(certainValues)`
+        * applied to <a href="#Package_unsafe"></a>,
+        <code>cap</code> or <code>len</code> applied to
+        <a href="#Length_and_capacity">some expressions</a>,
+        <code>real</code> and <code>imag</code> applied to a complex constant
+        and <code>complex</code> applied to numeric constants.
+    
+    The boolean truth values are represented by the predeclared constants
+    <code>true</code> and <code>false</code>. The predeclared identifier
+    <a href="#Iota">iota</a> denotes an integer constant.
 
 <p>
 In general, complex constants are a form of
@@ -1214,20 +1215,17 @@ type (
 
 ## Function types
 
-<p>
-A function type denotes the set of all functions with the same parameter
-and result types. The value of an uninitialized variable of function type
-is <code>nil</code>.
-</p>
+* := ALL functions / SAME parameter & result types
+* function type variable uninitialized 's value == `nil`
 
-<pre class="ebnf">
+```go
 FunctionType   = "func" Signature .
 Signature      = Parameters [ Result ] .
 Result         = Parameters | Type .
 Parameters     = "(" [ ParameterList [ "," ] ] ")" .
 ParameterList  = ParameterDecl { "," ParameterDecl } .
 ParameterDecl  = [ IdentifierList ] [ "..." ] Type .
-</pre>
+```
 
 <p>
 Within a list of parameters or results, the names (IdentifierList)
@@ -1248,7 +1246,7 @@ A function with such a parameter is called <i>variadic</i> and
 may be invoked with zero or more arguments for that parameter.
 </p>
 
-<pre>
+```go
 func()
 func(x int) int
 func(a, _ int, z float32) bool
@@ -1257,7 +1255,7 @@ func(prefix string, values ...int)
 func(a, b int, z float64, opt ...interface{}) (success bool)
 func(int, int, float64) (float64, *[]int)
 func(n int) func(p *T)
-</pre>
+```
 
 ## Interface types
 
@@ -2642,37 +2640,64 @@ present in the generic type definition.
 func (l *List[T]) Len() int  { … }
 </pre>
 
-<h3 id="Type_parameter_declarations">Type parameter declarations</h3>
+## Type parameter declarations
 
-<p>
-A type parameter list declares the <i>type parameters</i> of a generic function or type declaration.
-The type parameter list looks like an ordinary <a href="#Function_types">function parameter list</a>
-except that the type parameter names must all be present and the list is enclosed
-in square brackets rather than parentheses
-[<a href="#Go_1.18">Go 1.18</a>].
-</p>
-
-<pre class="ebnf">
+```
 TypeParameters  = "[" TypeParamList [ "," ] "]" .
 TypeParamList   = TypeParamDecl { "," TypeParamDecl } .
 TypeParamDecl   = IdentifierList TypeConstraint .
-</pre>
+```
 
-<p>
-All non-blank names in the list must be unique.
-Each name declares a type parameter, which is a new and different <a href="#Types">named type</a>
-that acts as a placeholder for an (as of yet) unknown type in the declaration.
-The type parameter is replaced with a <i>type argument</i> upon
-<a href="#Instantiations">instantiation</a> of the generic function or type.
-</p>
+* type parameter list
+  * uses
+    * type parameters | 👀generic function OR generic type declaration👀
+  * vs function parameter list
+    except that the type parameter names must all be present and the list is enclosed
+    in square brackets rather than parentheses
+    [Go 1.18](#go-118)
 
-<pre>
+```go
+// 1. TypeParameters | generic functions
+// 1.1   1 type parameter
+func Print[T any](value T) {
+    fmt.Println(value)
+}
+
+// 1.2   MULTIPLE type parameter
+func MapKeys[K comparable, V any](m map[K]V) []K {
+    keys := make([]K, 0, len(m))
+    for k := range m {
+        keys = append(keys, k)
+    }
+    return keys
+}
+
+// 2. TypeParameters | generic types
+// 2.1   1 type parameter
+type Stack[T any] struct {
+  items []T
+}
+
+// 2.2   MULTIPLE type parameter
+type Cache[K comparable, V any] struct {
+  data map[K]V
+}
+```
+
+* non-blank names | list
+  * MUST be unique
+  Each name declares a type parameter, which is a new and different <a href="#Types">named type</a>
+  that acts as a placeholder for an (as of yet) unknown type in the declaration.
+  The type parameter is replaced with a <i>type argument</i> upon
+  <a href="#Instantiations">instantiation</a> of the generic function or type.
+
+```go
 [P any]
 [S interface{ ~[]byte|string }]
 [S ~[]E, E any]
 [P Constraint[int]]
 [_ any]
-</pre>
+```
 
 <p>
 Just as each ordinary function parameter has a parameter type, each type parameter
@@ -2943,32 +2968,20 @@ In some contexts such as the initializers for
 they can be used to declare local temporary variables.
 </p>
 
-<h3 id="Function_declarations">Function declarations</h3>
+## Function declarations
 
-<!--
-	Given the importance of functions, this section has always
-	been woefully underdeveloped. Would be nice to expand this
-	a bit.
--->
+* allows
+  * function name is -- bound to a -- function
 
-<p>
-A function declaration binds an identifier, the <i>function name</i>,
-to a function.
-</p>
-
-<pre class="ebnf">
+```
 FunctionDecl = "func" FunctionName [ TypeParameters ] Signature [ FunctionBody ] .
 FunctionName = identifier .
 FunctionBody = Block .
-</pre>
+```
 
-<p>
-If the function's <a href="#Function_types">signature</a> declares
-result parameters, the function body's statement list must end in
-a <a href="#Terminating_statements">terminating statement</a>.
-</p>
+* if the `Signature` == result parameters -> `[ FunctionBody ]` MUST end in [terminating statement](#terminating-statements)
 
-<pre>
+```go
 func IndexRune(s string, r rune) int {
 	for i, c := range s {
 		if c == r {
@@ -2977,7 +2990,7 @@ func IndexRune(s string, r rune) int {
 	}
 	// invalid: missing return statement
 }
-</pre>
+```
 
 <p>
 If the function declaration specifies <a href="#Type_parameter_declarations">type parameters</a>,
@@ -3091,7 +3104,7 @@ func (p Pair[A, B]) Swap() Pair[B, A]  { … }  // receiver declares A, B
 func (p Pair[First, _]) First() First  { … }  // receiver declares First, corresponds to A in Pair
 </pre>
 
-<h2 id="Expressions">Expressions</h2>
+# Expressions
 
 <p>
 An expression specifies the computation of a value by applying
@@ -3100,43 +3113,31 @@ operators and functions to operands.
 
 ## Operands
 
-<p>
-Operands denote the elementary values in an expression. An operand may be a
-literal, a (possibly <a href="#Qualified_identifiers">qualified</a>)
-non-<a href="#Blank_identifier">blank</a> identifier denoting a
-<a href="#Constant_declarations">constant</a>,
-<a href="#Variable_declarations">variable</a>, or
-<a href="#Function_declarations">function</a>,
-or a parenthesized expression.
-</p>
+* Operands
+  * := 👀elementary values | expression👀
 
-<pre class="ebnf">
+```go
 Operand     = Literal | OperandName [ TypeArgs ] | "(" Expression ")" .
 Literal     = BasicLit | CompositeLit | FunctionLit .
 BasicLit    = int_lit | float_lit | imaginary_lit | rune_lit | string_lit .
 OperandName = identifier | QualifiedIdent .
-</pre>
+```
 
-<p>
-An operand name denoting a <a href="#Function_declarations">generic function</a>
-may be followed by a list of <a href="#Instantiations">type arguments</a>; the
-resulting operand is an <a href="#Instantiations">instantiated</a> function.
-</p>
+*  if `OperandName` == [generic function](#function-declarations) -> may be `OperandName [ TypeArgs ]`
+  * == instantiated function
 
-<p>
-The <a href="#Blank_identifier">blank identifier</a> may appear as an
-operand only on the left-hand side of an <a href="#Assignment_statements">assignment statement</a>.
-</p>
+* [blank identifier](#blank-identifier)
+  * ⚠️may appear -- as an -- operand, ONLY | assignment statement's left-hand side⚠️
+    ```go
+    _ = somethingRightHandSide
+    ```
 
-<p>
-Implementation restriction: A compiler need not report an error if an operand's
-type is a <a href="#Type_parameter_declarations">type parameter</a> with an empty
-<a href="#Interface_types">type set</a>. Functions with such type parameters
-cannot be <a href="#Instantiations">instantiated</a>; any attempt will lead
-to an error at the instantiation site.
-</p>
+* implementation restriction
+  * ❌if an operand's type == type parameter / empty type set -> 
+    * compiler need NOT report an error❌ 
+    * functions can NOT be instantiated❌
 
-<h3 id="Qualified_identifiers">Qualified identifiers</h3>
+## Qualified identifiers
 
 <p>
 A <i>qualified identifier</i> is an identifier qualified with a package name prefix.
@@ -3159,7 +3160,7 @@ declared in the <a href="#Blocks">package block</a> of that package.
 math.Sin // denotes the Sin function in package math
 </pre>
 
-<h3 id="Composite_literals">Composite literals</h3>
+## Composite literals
 
 <p>
 Composite literals construct new composite values each time they are evaluated.
@@ -3369,7 +3370,7 @@ noteFrequency := map[string]float32{
 </pre>
 
 
-<h3 id="Function_literals">Function literals</h3>
+## Function literals
 
 <p>
 A function literal represents an anonymous <a href="#Function_declarations">function</a>.
@@ -3401,7 +3402,7 @@ as they are accessible.
 </p>
 
 
-<h3 id="Primary_expressions">Primary expressions</h3>
+## Primary expressions
 
 <p>
 Primary expressions are the operands for unary and binary expressions.
@@ -3440,7 +3441,7 @@ f.p[i].x()
 </pre>
 
 
-<h3 id="Selectors">Selectors</h3>
+## Selectors
 
 <p>
 For a <a href="#Primary_expressions">primary expression</a> <code>x</code>
@@ -3586,7 +3587,7 @@ q.M0()       // (*q).M0 is valid but not a field selector
 </pre>
 
 
-<h3 id="Method_expressions">Method expressions</h3>
+## Method expressions
 
 <p>
 If <code>M</code> is in the <a href="#Method_sets">method set</a> of type <code>T</code>,
@@ -3707,7 +3708,7 @@ It is legal to derive a function value from a method of an interface type.
 The resulting function takes an explicit receiver of that interface type.
 </p>
 
-<h3 id="Method_values">Method values</h3>
+## Method values
 
 <p>
 If the expression <code>x</code> has static type <code>T</code> and
@@ -3825,7 +3826,7 @@ f := i.M; f(7)  // like i.M(7)
 </pre>
 
 
-<h3 id="Index_expressions">Index expressions</h3>
+## Index expressions
 
 <p>
 A primary expression of the form
@@ -3956,7 +3957,7 @@ Assigning to an element of a <code>nil</code> map causes a
 </p>
 
 
-<h3 id="Slice_expressions">Slice expressions</h3>
+## Slice expressions
 
 <p>
 Slice expressions construct a substring or slice from a string, array, pointer
@@ -3964,7 +3965,7 @@ to array, or slice. There are two variants: a simple form that specifies a low
 and high bound, and a full form that also specifies a bound on the capacity.
 </p>
 
-<h4>Simple slice expressions</h4>
+### Simple slice expressions
 
 <p>
 The primary expression
@@ -4054,7 +4055,7 @@ s3 := s[:0]    // s3 == nil
 </pre>
 
 
-<h4>Full slice expressions</h4>
+### Full slice expressions
 
 <p>
 The primary expression
@@ -4104,7 +4105,7 @@ other.
 If the indices are out of range at run time, a <a href="#Run_time_panics">run-time panic</a> occurs.
 </p>
 
-<h3 id="Type_assertions">Type assertions</h3>
+## Type assertions
 
 <p>
 For an expression <code>x</code> of <a href="#Interface_types">interface type</a>,
@@ -4172,7 +4173,7 @@ No <a href="#Run_time_panics">run-time panic</a> occurs in this case.
 </p>
 
 
-<h3 id="Calls">Calls</h3>
+## Calls
 
 <p>
 Given an expression <code>f</code> with a <a href="#Core_types">core type</a>
@@ -4267,7 +4268,7 @@ p.Scale(3.5)
 There is no distinct method type and there are no method literals.
 </p>
 
-<h3 id="Passing_arguments_to_..._parameters">Passing arguments to <code>...</code> parameters</h3>
+## Passing arguments to `...` parameters
 
 <p>
 If <code>f</code> is <a href="#Function_types">variadic</a> with a final
@@ -4318,7 +4319,7 @@ within <code>Greeting</code>, <code>who</code> will have the same value as <code
 with the same underlying array.
 </p>
 
-<h3 id="Instantiations">Instantiations</h3>
+## Instantiations
 
 <p>
 A generic function or type is <i>instantiated</i> by substituting <i>type arguments</i>
@@ -4419,7 +4420,7 @@ r := apply(bytes, func(byte) byte { … })  // both type arguments inferred from
 For a generic type, all type arguments must always be provided explicitly.
 </p>
 
-<h3 id="Type_inference">Type inference</h3>
+## Type inference
 
 <p>
 A use of a generic function may omit some or all type arguments if they can be
@@ -5236,44 +5237,43 @@ The left operand is evaluated, and then the right if the condition requires it.
 </pre>
 
 
-<h3 id="Address_operators">Address operators</h3>
+## Address operators
 
-<p>
-For an operand <code>x</code> of type <code>T</code>, the address operation
-<code>&amp;x</code> generates a pointer of type <code>*T</code> to <code>x</code>.
-The operand must be <i>addressable</i>,
-that is, either a variable, pointer indirection, or slice indexing
-operation; or a field selector of an addressable struct operand;
-or an array indexing operation of an addressable array.
-As an exception to the addressability requirement, <code>x</code> may also be a
-(possibly parenthesized)
-<a href="#Composite_literals">composite literal</a>.
-If the evaluation of <code>x</code> would cause a <a href="#Run_time_panics">run-time panic</a>,
-then the evaluation of <code>&amp;x</code> does too.
-</p>
+* let's be `x` == operand / type `T`
+  * `&x` == address operation
+    * -> generates a pointer -- to -- `x` / 
+      * type `*T`
+  * requirements
+    * ⚠️operand MUST be 
+      * addressable⚠️
+        * == ALLOWED
+          * variable,
+          * pointer indirection,
+          * slice indexing operation,
+          * addressable struct operand's field selector
+          * addressable array's array indexing operation
+      * composite literal⚠️
+  * ⚠️if | evaluate `x`, run-time panic -> evaluation of `&x` run-time panic⚠️
 
-<p>
-For an operand <code>x</code> of pointer type <code>*T</code>, the pointer
-indirection <code>*x</code> denotes the <a href="#Variables">variable</a> of type <code>T</code> pointed
-to by <code>x</code>.
-If <code>x</code> is <code>nil</code>, an attempt to evaluate <code>*x</code>
-will cause a <a href="#Run_time_panics">run-time panic</a>.
-</p>
+* let's be `x` == operand of pointer type `*T`
+  * pointer indirection (`*x`) == variable /
+    * type `T` 
+    * pointed to, -- by -- `x`
+  * ⚠️if `x == nil` & you try to evaluate `*x` -> run-time panic⚠️
 
-<pre>
-&amp;x
-&amp;a[f(2)]
-&amp;Point{2, 3}
+```go
+&x
+&a[f(2)]
+&Point{2, 3}
 *p
 *pf(x)
 
 var x *int = nil
 *x   // causes a run-time panic
-&amp;*x  // causes a run-time panic
-</pre>
+&*x  // causes a run-time panic
+```
 
-
-<h3 id="Receive_operator">Receive operator</h3>
+## Receive operator
 
 <p>
 For an operand <code>ch</code> whose <a href="#Core_types">core type</a> is a
@@ -5883,7 +5883,7 @@ Statement =
 SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | ShortVarDecl .
 </pre>
 
-<h3 id="Terminating_statements">Terminating statements</h3>
+## Terminating statements
 
 <p>
 A <i>terminating statement</i> interrupts the regular flow of control in
@@ -8266,36 +8266,19 @@ type Error interface {
 }
 </pre>
 
-<h2 id="System_considerations">System considerations</h2>
+## System considerations
 
-<h3 id="Package_unsafe">Package <code>unsafe</code></h3>
+## Package `unsafe`
 
-<p>
-The built-in package <code>unsafe</code>, known to the compiler
-and accessible through the <a href="#Import_declarations">import path</a> <code>"unsafe"</code>,
-provides facilities for low-level programming including operations
-that violate the type system. A package using <code>unsafe</code>
-must be vetted manually for type safety and may not be portable.
-The package provides the following interface:
-</p>
-
-<pre class="grammar">
-package unsafe
-
-type ArbitraryType int  // shorthand for an arbitrary Go type; it is not a real type
-type Pointer *ArbitraryType
-
-func Alignof(variable ArbitraryType) uintptr
-func Offsetof(selector ArbitraryType) uintptr
-func Sizeof(variable ArbitraryType) uintptr
-
-type IntegerType int  // shorthand for an integer type; it is not a real type
-func Add(ptr Pointer, len IntegerType) Pointer
-func Slice(ptr *ArbitraryType, len IntegerType) []ArbitraryType
-func SliceData(slice []ArbitraryType) *ArbitraryType
-func String(ptr *byte, len IntegerType) string
-func StringData(str string) *byte
-</pre>
+* built-in package / 
+  * known -- to the -- compiler
+  * accessible -- through the -- import path `"unsafe"`
+  * provides
+    * 👀facilities -- for -- low-level programming👀
+      * _Example:_ operations / violate the type system
+  * ⚠️cons⚠️
+    * | type safety, MUST be reviewed MANUALLY
+    * may NOT be portable
 
 <!--
 These conversions also apply to type parameters with suitable core types.
@@ -8303,13 +8286,13 @@ Determine if we can simply use core type instead of underlying type here,
 of if the general conversion rules take care of this.
 -->
 
-<p>
-A <code>Pointer</code> is a <a href="#Pointer_types">pointer type</a> but a <code>Pointer</code>
-value may not be <a href="#Address_operators">dereferenced</a>.
-Any pointer or value of <a href="#Core_types">core type</a> <code>uintptr</code> can be
-<a href="#Conversions">converted</a> to a type of core type <code>Pointer</code> and vice versa.
-The effect of converting between <code>Pointer</code> and <code>uintptr</code> is implementation-defined.
-</p>
+* `Pointer`
+  * == pointer type
+  * 's value
+    * ⚠️may NOT be dereferenced ⚠️
+    Any pointer or value of <a href="#Core_types">core type</a> <code>uintptr</code> can be
+    <a href="#Conversions">converted</a> to a type of core type <code>Pointer</code> and vice versa.
+    The effect of converting between <code>Pointer</code> and <code>uintptr</code> is implementation-defined.
 
 <pre>
 var f float64
@@ -8465,9 +8448,9 @@ The following minimal alignment properties are guaranteed:
 A struct or array type has size zero if it contains no fields (or elements, respectively) that have a size greater than zero. Two distinct zero-size variables may have the same address in memory.
 </p>
 
-<h2 id="Appendix">Appendix</h2>
+# Appendix
 
-<h3 id="Language_versions">Language versions</h3>
+## Language versions
 
 <p>
 The <a href="/doc/go1compat">Go 1 compatibility guarantee</a> ensures that
@@ -8542,7 +8525,7 @@ The built-in <a href="#Package_unsafe">package <code>unsafe</code></a> includes 
 </li>
 </ul>
 
-<h4 id="Go_1.18">Go 1.18</h4>
+### Go 1.18
 <p>
 The 1.18 release adds polymorphic functions and types ("generics") to the language.
 Specifically:
