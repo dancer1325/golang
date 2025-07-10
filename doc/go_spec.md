@@ -744,18 +744,17 @@ expressions</a>.
 
 # Variables
 
-<p>
-A variable is a storage location for holding a <i>value</i>.
-The set of permissible values is determined by the
-variable's <i><a href="#Types">type</a></i>.
-</p>
+* == storage location
+* uses
+  * hold a value /
+    * ⚠️ALLOWED values is determined -- by the -- variable's [type](#variables)⚠️
 
-* 
-A <a href="#Variable_declarations">variable declaration</a>
-or, for function parameters and results, the signature
-of a <a href="#Function_declarations">function declaration</a>
-or <a href="#Function_literals">function literal</a> reserves
-storage for a named variable.
+* entities / reserve storage -- for a -- named variable
+  * [variable declaration](#variable-declarations)
+  * [function declaration](#function-declarations)'s
+    * parameters
+    * results
+  * [function literal](#function-literals) 
 
 Calling the built-in function <a href="#Allocation"><code>new</code></a>
 or taking the address of a <a href="#Composite_literals">composite literal</a>
@@ -1197,7 +1196,7 @@ type (
 ## Pointer types
 
 * pointer type
-  * == ⭐️ALL pointers -- to -- given type's variables⭐️
+  * == ⭐️ALL pointers -- to -- given variables of certain type⭐️
   * ❌if it's NOT initialized -> 's value == `nil`❌
   * syntax
     ```go
@@ -2860,7 +2859,7 @@ Because of the exception in the constraint satisfaction rule, comparing operands
 may panic at run-time (even though comparable type parameters are always strictly comparable).
 </p>
 
-<h3 id="Variable_declarations">Variable declarations</h3>
+## Variable declarations
 
 <p>
 A variable declaration creates one or more <a href="#Variables">variables</a>,
@@ -7648,39 +7647,20 @@ min(x, y)    == if x <= y then x else y
 min(x, y, z) == min(min(x, y), z)
 </pre>
 
-<h3 id="Allocation">Allocation</h3>
+## Allocation
 
-<p>
-The built-in function <code>new</code> takes a type <code>T</code>,
-allocates storage for a <a href="#Variables">variable</a> of that type
-at run time, and returns a value of type <code>*T</code>
-<a href="#Pointer_types">pointing</a> to it.
-The variable is initialized as described in the section on
-<a href="#The_zero_value">initial values</a>.
-</p>
+* 💡-- via -- `new` 💡
 
-<pre class="grammar">
-new(T)
-</pre>
+* `new(someType)`
+  * == built-in function /
+    * | run time, 
+      * allocates storage -- for a -- [variable](#variables) of `someType`
+      * initializes it -- by -- [zero-value](#the-zero-value)
+      * returns a value / type == `*someType` / [point](#pointer-types) -- to -- it
 
-<p>
-For instance
-</p>
+* see [zero value](#the-zero-value)
 
-<pre>
-type S struct { a int; b float64 }
-new(S)
-</pre>
-
-<p>
-allocates storage for a variable of type <code>S</code>,
-initializes it (<code>a=0</code>, <code>b=0.0</code>),
-and returns a value of type <code>*S</code> containing the address
-of the location.
-</p>
-
-
-<h3 id="Handling_panics">Handling panics</h3>
+## Handling panics
 
 <p> Two built-in functions, <code>panic</code> and <code>recover</code>,
 assist in reporting and handling <a href="#Run_time_panics">run-time panics</a>
@@ -7953,59 +7933,29 @@ func main() {
 }
 </pre>
 
-<h2 id="Program_initialization_and_execution">Program initialization and execution</h2>
+# Program initialization and execution
 
-<h3 id="The_zero_value">The zero value</h3>
-<p>
-When storage is allocated for a <a href="#Variables">variable</a>,
-either through a declaration or a call of <code>new</code>, or when
-a new value is created, either through a composite literal or a call
-of <code>make</code>,
-and no explicit initialization is provided, the variable or value is
-given a default value.  Each element of such a variable or value is
-set to the <i>zero value</i> for its type: <code>false</code> for booleans,
-<code>0</code> for numeric types, <code>""</code>
-for strings, and <code>nil</code> for pointers, functions, interfaces, slices, channels, and maps.
-This initialization is done recursively, so for instance each element of an
-array of structs will have its fields zeroed if no value is specified.
-</p>
-<p>
-These two simple declarations are equivalent:
-</p>
+## The zero value
 
-<pre>
-var i int
-var i int = 0
-</pre>
+* == default variable value /  
+  * | allocate storage, 
+    * ❌NO initialized explicitly❌
+  * depend -- on -- its type 
+    * booleans -- `false`
+    * numeric types -- `0`
+    * string -- `""`
+    * pointers, functions, interfaces, slices, channels, and maps  -- `nil` 
+  * ⚠️apply | recursive types⚠️
+  * can ALSO be specified EXPLICITLY
 
-<p>
-After
-</p>
-
-<pre>
-type T struct { i int; f float64; next *T }
-t := new(T)
-</pre>
-
-<p>
-the following holds:
-</p>
-
-<pre>
-t.i == 0
-t.f == 0.0
-t.next == nil
-</pre>
-
-<p>
-The same would also be true after
-</p>
-
-<pre>
-var t T
-</pre>
-
-<h3 id="Package_initialization">Package initialization</h3>
+* use cases
+  * declare a variable
+  * call of `new`
+  * create a NEW value -- through --
+    * composite literal
+    * call of `make`
+  
+## Package initialization
 
 <p>
 Within a package, package-level variable initialization proceeds stepwise,
