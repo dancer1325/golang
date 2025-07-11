@@ -10,28 +10,32 @@
 
 ## General verbs
 
-	%v	the value in a default format
-		when printing structs, the plus flag (%+v) adds field names
-	%#v	a Go-syntax representation of the value
-		(floating-point infinities and NaNs print as ±Inf and NaN)
-	%T	a Go-syntax representation of the type of the value
-	%%	a literal percent sign; consumes no value
+| Verbo | Descripción                                                                                                  |
+|-------|--------------------------------------------------------------------------------------------------------------|
+| `%v`  | default one <br/> ❌NOT valid \| integer❌                                                                     |
+| `%+v` | \| structs, add field names                                                                                  |
+| `%#v` | Go-syntax representation of the value <br/> floating-point infinities & NaNs are printed -- as -- ±Inf & NaN |
+| `%T`  | Go-syntax representation of the type of the value                                                            |
+| `%%`  | print `%`  ==  scape `%`                                                                                     |
 
 ## Boolean verbs
 
-	%t	the word true or false
+* `%t`
+  * `true` OR `false`
 
 ## Integer verbs
 
-	%b	base 2
-	%c	the character represented by the corresponding Unicode code point
-	%d	base 10, default one
-	%o	base 8
-	%O	base 8 with 0o prefix
-	%q	a single-quoted character literal safely escaped with Go syntax.
-	%x	base 16, with lower-case letters for a-f
-	%X	base 16, with upper-case letters for A-F
-	%U	Unicode format: U+1234; same as "U+%04X"
+| Verb | Description                                                       |
+|------|-------------------------------------------------------------------|
+| `%b` | base 2 == binary                                                  |
+| `%c` | Unicode code point                                                |
+| `%d` | base 10  <br/> default one                                        |
+| `%o` | base 8                                                            |
+| `%O` | base 8 with 0o prefix                                             |
+| `%q` | 1!-quoted character literal / safely escaped -- with -- Go syntax |
+| `%x` | base 16 / lower-case letters -- for -- a-f                        |
+| `%X` | base 16 / with upper-case letters -- for -- A-F                   |
+| `%U` | Unicode format: U+1234 / == "U+%04X"                              |
 
 ## Floating-point and complex constituents verbs
 
