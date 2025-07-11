@@ -2164,45 +2164,27 @@ In a method set, each method must have a
 non-<a href="#Blank_identifier">blank</a> <a href="#MethodName">method name</a>.
 </p>
 
-<h2 id="Blocks">Blocks</h2>
+# Blocks
 
-<p>
-A <i>block</i> is a possibly empty sequence of declarations and statements
-within matching brace brackets.
-</p>
-
-<pre class="ebnf">
+```go
 Block = "{" StatementList "}" .
 StatementList = { Statement ";" } .
-</pre>
+```
 
-<p>
-In addition to explicit blocks in the source code, there are implicit blocks:
-</p>
+* == (POSSIBLY) empty sequence of declarations & statements | `{}`
 
-<ol>
-	<li>The <i>universe block</i> encompasses all Go source text.</li>
+* types of blocks
+  * explicit
+  * implicit
+    * universe block
+      * == ALL Go source built-in
+    * package block
+      * == ALL [package](#packages)'s Go source
+    * file's block
+      * == ALL Go source text | that file
+    * `if`, `for`, `switch`'s implicit blocks
 
-	<li>Each <a href="#Packages">package</a> has a <i>package block</i> containing all
-	    Go source text for that package.</li>
-
-	<li>Each file has a <i>file block</i> containing all Go source text
-	    in that file.</li>
-
-	<li>Each <a href="#If_statements">"if"</a>,
-	    <a href="#For_statements">"for"</a>, and
-	    <a href="#Switch_statements">"switch"</a>
-	    statement is considered to be in its own implicit block.</li>
-
-	<li>Each clause in a <a href="#Switch_statements">"switch"</a>
-	    or <a href="#Select_statements">"select"</a> statement
-	    acts as an implicit block.</li>
-</ol>
-
-<p>
-Blocks nest and influence <a href="#Declarations_and_scope">scoping</a>.
-</p>
-
+* nest & influence [scoping](#declarations-and-scope)
 
 # Declarations and scope
 
@@ -2218,7 +2200,7 @@ Blocks nest and influence <a href="#Declarations_and_scope">scoping</a>.
   Every identifier in a program must be declared.
   No identifier may be declared twice in the same block, and
   no identifier may be declared in both the file and package block.
-</p>
+
 
 <p>
 The <a href="#Blank_identifier">blank identifier</a> may be used like any other identifier
@@ -2315,8 +2297,7 @@ the body of any nested function.
 
 ## Predeclared identifiers
 
-<p>
-The following identifiers are implicitly declared in the
+* identifiers / implicitly declared | 
 <a href="#Blocks">universe block</a>
 [<a href="#Go_1.18">Go 1.18</a>]
 [<a href="#Go_1.21">Go 1.21</a>]:
@@ -6218,7 +6199,7 @@ to the type of the operand to which it is assigned, with the following special c
 </li>
 </ol>
 
-<h3 id="If_statements">If statements</h3>
+## If statements
 
 <p>
 "If" statements specify the conditional execution of two branches
@@ -6253,7 +6234,7 @@ if x := f(); x &lt; y {
 </pre>
 
 
-<h3 id="Switch_statements">Switch statements</h3>
+## Switch statements
 
 <p>
 "Switch" statements provide multi-way execution.
@@ -6497,7 +6478,7 @@ executes before the guard is evaluated.
 The "fallthrough" statement is not permitted in a type switch.
 </p>
 
-<h3 id="For_statements">For statements</h3>
+## For statements
 
 <p>
 A "for" statement specifies repeated execution of a block. There are three forms:
@@ -7758,7 +7739,7 @@ accept arbitrary argument types, but printing of boolean, numeric, and string
 </p>
 
 
-<h2 id="Packages">Packages</h2>
+# Packages
 
 <p>
 Go programs are constructed by linking together <i>packages</i>.
