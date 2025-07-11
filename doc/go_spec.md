@@ -1212,6 +1212,8 @@ type (
 * pointer's base type
   * := given type's variables
 
+* _Examples:_ [here](examples/pointer-types.go)
+
 ## Function types
 
 * := ALL functions / SAME parameter & result types
