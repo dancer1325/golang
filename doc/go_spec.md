@@ -2286,13 +2286,14 @@ the body of any nested function.
 </p>
 
 
-## Blank identifier
+## Blank identifier -- `_` --
 
 * blank identifier
   * `_`
   * uses
     * 👀anonymous placeholder👀
       * != regular (non-blank) identifier
+      * == ignore values / NOT need
     * | [declarations](#declarations-and-scope)
       * == [operand](#operands)
     * | [assignment statements](#assignment-statements)
@@ -2303,7 +2304,7 @@ the body of any nested function.
 <a href="#Blocks">universe block</a>
 [<a href="#Go_1.18">Go 1.18</a>]
 [<a href="#Go_1.21">Go 1.21</a>]:
-</p>
+
 <pre class="grammar">
 Types:
 	any bool byte comparable
@@ -7940,72 +7941,43 @@ func main() {
   
 ## Package initialization
 
-<p>
-Within a package, package-level variable initialization proceeds stepwise,
-with each step selecting the variable earliest in <i>declaration order</i>
-which has no dependencies on uninitialized variables.
-</p>
+* package-level variable initialization
+  * -- via -- steps /
+    * select 1 variable / EACH step /
+      * earliest | declaration order
+        * == | package, from top -- to -- down 
+      * requirements
+        * NOT YET initialized 
+        * either
+          * NO initialization expression, OR 
+          * ⚠️NO depend -- on -- uninitialized variables⚠️
 
-<p>
-More precisely, a package-level variable is considered <i>ready for
-initialization</i> if it is not yet initialized and either has
-no <a href="#Variable_declarations">initialization expression</a> or
-its initialization expression has no <i>dependencies</i> on uninitialized variables.
-Initialization proceeds by repeatedly initializing the next package-level
-variable that is earliest in declaration order and ready for initialization,
-until there are no variables ready for initialization.
-</p>
+* initialization cycle
+  * == variable cyclic dependency
+  * == variables / IMPOSSIBLE to initialize 
 
-<p>
-If any variables are still uninitialized when this
-process ends, those variables are part of one or more initialization cycles,
-and the program is not valid.
-</p>
+* | variable declaration initialization,
+  * if | left-hand side, there are SEVERAL variables & | right-hand side, 1! value  -> ALL are initialized
+    * == ALL or NONE are initialized
 
-<p>
-Multiple variables on the left-hand side of a variable declaration initialized
-by single (multi-valued) expression on the right-hand side are initialized
-together: If any of the variables on the left-hand side is initialized, all
-those variables are initialized in the same step.
-</p>
+* | package initialization,
+  * [blank identifier variables](#blank-identifier----_---) are treated -- like -- other variables | declarations
 
-<pre>
-var x = a
-var a, b = f() // a and b are initialized together, before x is initialized
-</pre>
+* if there are MULTIPLE files -> declaration order of variables is 👀determined -- by the -- order / files are presented | compiler👀
+  * == if the file is declared FIRSTLY -> variables declared before
+  * order / files are presented | compiler == order / passed | `go run`
+  * _Example:_ `go run examples/package-initialization-multiple-z.go examples/package-initialization-multiple-a.go`
 
-<p>
-For the purpose of package initialization, <a href="#Blank_identifier">blank</a>
-variables are treated like any other variables in declarations.
-</p>
-
-<p>
-The declaration order of variables declared in multiple files is determined
-by the order in which the files are presented to the compiler: Variables
-declared in the first file are declared before any of the variables declared
-in the second file, and so on.
-To ensure reproducible initialization behavior, build systems are encouraged
-to present multiple files belonging to the same package in lexical file name
-order to a compiler.
-</p>
-
-<p>
-Dependency analysis does not rely on the actual values of the
-variables, only on lexical <i>references</i> to them in the source,
-analyzed transitively. For instance, if a variable <code>x</code>'s
-initialization expression refers to a function whose body refers to
-variable <code>y</code> then <code>x</code> depends on <code>y</code>.
-Specifically:
-</p>
-
-<ul>
-<li>
-A reference to a variable or function is an identifier denoting that
-variable or function.
-</li>
-
-<li>
-A reference to a method <code>m</code> is a
+* dependency analysis
+  * NOT rely on
+    * CURRENT variables' values
+  * rely on
+    * 👀lexical references👀 -- to -- the variables | source / analyzed transitively
+      * ⚠️lexical reference != copy by reference ⚠️
+        * 👀if you need copy by referency -> use pointers 👀
+  * use cases
+    * reference to a variable OR function == identifier -- to that -- variable or function
+    * TODO: A reference to a method <code>m</code> is a
 <a href="#Method_values">method value</a> or
 <a href="#Method_expressions">method expression</a> of the form
 <code>t.m</code>, where the (static) type of <code>t</code> is
@@ -8013,40 +7985,11 @@ not an interface type, and the method <code>m</code> is in the
 <a href="#Method_sets">method set</a> of <code>t</code>.
 It is immaterial whether the resulting function value
 <code>t.m</code> is invoked.
-</li>
-
-<li>
-A variable, function, or method <code>x</code> depends on a variable
+    *  variable, function, or method <code>x</code> depends on a variable
 <code>y</code> if <code>x</code>'s initialization expression or body
 (for functions and methods) contains a reference to <code>y</code>
 or to a function or method that depends on <code>y</code>.
-</li>
-</ul>
-
-<p>
-For example, given the declarations
-</p>
-
-<pre>
-var (
-	a = c + b  // == 9
-	b = f()    // == 4
-	c = f()    // == 5
-	d = 3      // == 5 after initialization has finished
-)
-
-func f() int {
-	d++
-	return d
-}
-</pre>
-
-<p>
-the initialization order is <code>d</code>, <code>b</code>, <code>c</code>, <code>a</code>.
-Note that the order of subexpressions in initialization expressions is irrelevant:
-<code>a = c + b</code> and <code>a = b + c</code> result in the same initialization
-order in this example.
-</p>
+  * / EACH package
 
 <p>
 Dependency analysis is performed per package; only references referring
@@ -8078,33 +8021,27 @@ thus also the moment at which <code>sideEffect()</code> is called (before
 or after <code>x</code> is initialized) is not specified.
 </p>
 
-<p>
-Variables may also be initialized using functions named <code>init</code>
-declared in the package block, with no arguments and no result parameters.
-</p>
+* `func init() { … }`
+  * requirements
+    * declare it | package block
+    * NO arguments 
+    * NO result parameters
+    * functionName == `init`
+  * uses
+    * package-level variable initialization 
+  * ALLOWED
+    * define MULTIPLE | SAME
+      * package
+      * source file
+  * | package block,
+    * `init` identifier 
+      * ONLY ALLOWED -- for -- `func init()`
+      * ❌can NOT be referred ❌
+  * package initialization steps
+    * assign initial values / declared -- via -- ALL package-level variables
+    * 👀call AUTOMATICALLY ALL `init` functions / follow the declaration order👀
 
-<pre>
-func init() { … }
-</pre>
-
-<p>
-Multiple such functions may be defined per package, even within a single
-source file. In the package block, the <code>init</code> identifier can
-be used only to declare <code>init</code> functions, yet the identifier
-itself is not <a href="#Declarations_and_scope">declared</a>. Thus
-<code>init</code> functions cannot be referred to from anywhere
-in a program.
-</p>
-
-<p>
-The entire package is initialized by assigning initial values
-to all its package-level variables followed by calling
-all <code>init</code> functions in the order they appear
-in the source, possibly in multiple files, as presented
-to the compiler.
-</p>
-
-<h3 id="Program_initialization">Program initialization</h3>
+## Program initialization
 
 <p>
 The packages of a complete program are initialized stepwise, one package at a time.
