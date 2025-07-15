@@ -1,9 +1,3 @@
-<!--{
-	"Title": "The Go Programming Language Specification",
-	"Subtitle": "Language version go1.22 (Feb 6, 2024)",
-	"Path": "/ref/spec"
-}-->
-
 # Introduction
 
 * Go programming language's reference manual
@@ -255,20 +249,20 @@ Some identifiers are <a href="#Predeclared_identifiers">predeclared</a>.
 </p>
 
 
-<h3 id="Keywords">Keywords</h3>
+## Keywords
 
-<p>
-The following keywords are reserved and may not be used as identifiers.
-</p>
-<pre class="grammar">
+* reserver keywords
+  * == ❌NOT ALLOWED to use -- as -- identifiers❌
+
+```
 break        default      func         interface    select
 case         defer        go           map          struct
 chan         else         goto         package      switch
 const        fallthrough  if           range        type
 continue     for          import       return       var
-</pre>
+```
 
-<h3 id="Operators_and_punctuation">Operators and punctuation</h3>
+## Operators and punctuation
 
 <p>
 The following character sequences represent <a href="#Operators">operators</a>
@@ -1260,15 +1254,13 @@ func(n int) func(p *T)
 
 ## Interface types
 
-<p>
-An interface type defines a <i>type set</i>.
-A variable of interface type can store a value of any type that is in the type
-set of the interface. Such a type is said to
-<a href="#Implementing_an_interface">implement the interface</a>.
-The value of an uninitialized variable of interface type is <code>nil</code>.
-</p>
+* == type set
+* variable of interface type
+  * can store a value / type included | type set
+    * == ["that type implements the interface"](#implementing-an-interface)
+  * if it's uninitialized -> == `nil`
 
-<pre class="ebnf">
+```go
 InterfaceType  = "interface" "{" { InterfaceElem ";" } "}" .
 InterfaceElem  = MethodElem | TypeElem .
 MethodElem     = MethodName Signature .
@@ -1276,25 +1268,25 @@ MethodName     = identifier .
 TypeElem       = TypeTerm { "|" TypeTerm } .
 TypeTerm       = Type | UnderlyingType .
 UnderlyingType = "~" Type .
-</pre>
+```
 
-<p>
-An interface type is specified by a list of <i>interface elements</i>.
-An interface element is either a <i>method</i> or a <i>type element</i>,
-where a type element is a union of one or more <i>type terms</i>.
-A type term is either a single type or a single underlying type.
-</p>
+* == list of interface elements /
+  * interface element is
+    * method OR
+    * type element
+      * == UNION of >=1 type terms
 
-<h4 id="Basic_interfaces">Basic interfaces</h4>
+### Basic interfaces
 
-<p>
-In its most basic form an interface specifies a (possibly empty) list of methods.
-The type set defined by such an interface is the set of types which implement all of
-those methods, and the corresponding <a href="#Method_sets">method set</a> consists
-exactly of the methods specified by the interface.
-Interfaces whose type sets can be defined entirely by a list of methods are called
-<i>basic interfaces.</i>
-</p>
+* basic interfaces
+  * := interfaces / type sets are defined -- entirely by a -- list of methods 
+  * MOST basic form
+    * == EMPTY list of methods
+  * 's type set
+    * == set of types / implement ALL those methods
+
+* [method set](#method-sets)
+  * == methods / specified -- by the -- interface
 
 <pre>
 // A simple File interface.
@@ -1601,26 +1593,15 @@ type Bad4 interface {
 }
 </pre>
 
-<h4 id="Implementing_an_interface">Implementing an interface</h4>
+### Implementing an interface
 
-<p>
-A type <code>T</code> implements an interface <code>I</code> if
-</p>
-
-<ul>
-<li>
-	<code>T</code> is not an interface and is an element of the type set of <code>I</code>; or
-</li>
-<li>
-	<code>T</code> is an interface and the type set of <code>T</code> is a subset of the
-	type set of <code>I</code>.
-</li>
-</ul>
-
-<p>
-A value of type <code>T</code> implements an interface if <code>T</code>
-implements the interface.
-</p>
+* let's be type `T` & interface `I`
+  * 👀requirements / `T` implements `I`👀
+    * `T`
+      * != interface & == element -- of the -- `I`'s type set, OR
+      * == interface & `T`'s type set == subset of the `I`'s type set
+  * 👀requirements / value of type `T` implements `I`👀
+    * `T` implements the interface
 
 ## Map types
 
@@ -1684,15 +1665,16 @@ may be added.
 
 ## Channel types
 
-<p>
-A channel provides a mechanism for
-<a href="#Go_statements">concurrently executing functions</a>
-to communicate by
-<a href="#Send_statements">sending</a> and
-<a href="#Receive_operator">receiving</a>
-values of a specified element type.
-The value of an uninitialized channel is <code>nil</code>.
-</p>
+* channel
+  * allows
+    * goroutines can
+      * send values / specific type
+      * receive values / specific type
+
+        <a href="#Send_statements">sending</a> and
+        <a href="#Receive_operator">receiving</a>
+        values of a specified element type.
+        The value of an uninitialized channel is <code>nil</code>.
 
 <pre class="ebnf">
 ChannelType = ( "chan" | "chan" "&lt;-" | "&lt;-" "chan" ) ElementType .
@@ -1770,47 +1752,38 @@ received in the order sent.
 
 <h2 id="Properties_of_types_and_values">Properties of types and values</h2>
 
-<h3 id="Underlying_types">Underlying types</h3>
+## Underlying types
 
-<p>
-Each type <code>T</code> has an <i>underlying type</i>: If <code>T</code>
-is one of the predeclared boolean, numeric, or string types, or a type literal,
-the corresponding underlying type is <code>T</code> itself.
-Otherwise, <code>T</code>'s underlying type is the underlying type of the
-type to which <code>T</code> refers in its declaration.
+* == 💡real type / Go uses internally💡
+* EXIST underlying type / EACH type
+  * if type == 
+    * built-in
+      * boolean -> underlying type == boolean
+      * numeric -> underlying type == numeric
+      * string -> underlying type == string
+    * custom type / -- based on --
+      * built-in types -> underlying type == built-in types 
+      * type literals -> underlying type == type literal
+
+* TODO:
 For a type parameter that is the underlying type of its
 <a href="#Type_constraints">type constraint</a>, which is always an interface.
-</p>
+
 
 <pre>
-type (
-	A1 = string
-	A2 = A1
-)
-
-type (
-	B1 string
-	B2 B1
-	B3 []B1
-	B4 B3
-)
-
 func f[P any](x P) { … }
 </pre>
 
 <p>
-The underlying type of <code>string</code>, <code>A1</code>, <code>A2</code>, <code>B1</code>,
-and <code>B2</code> is <code>string</code>.
-The underlying type of <code>[]B1</code>, <code>B3</code>, and <code>B4</code> is <code>[]B1</code>.
 The underlying type of <code>P</code> is <code>interface{}</code>.
 </p>
 
-<h3 id="Core_types">Core types</h3>
+## Core types
 
-<p>
-Each non-interface type <code>T</code> has a <i>core type</i>, which is the same as the
+* 👀EXIST core type / EACH non-interface type👀
+  * == underlying type
+  
 <a href="#Underlying_types">underlying type</a> of <code>T</code>.
-</p>
 
 <p>
 An interface <code>T</code> has a core type if one of the following
@@ -1905,7 +1878,7 @@ variables or compose other types. It exists solely to describe the behavior of s
 operations that read from a sequence of bytes, which may be a byte slice or a string.
 </p>
 
-<h3 id="Type_identity">Type identity</h3>
+## Type identity
 
 <p>
 Two types are either <i>identical</i> or <i>different</i>.
@@ -2006,28 +1979,15 @@ defined type while the latter is a type literal
 (but they are still <a href="#Assignability">assignable</a>).
 </p>
 
-<h3 id="Assignability">Assignability</h3>
+## Assignability
 
-<p>
-A value <code>x</code> of type <code>V</code> is <i>assignable</i> to a <a href="#Variables">variable</a> of type <code>T</code>
-("<code>x</code> is assignable to <code>T</code>") if one of the following conditions applies:
-</p>
-
-<ul>
-<li>
-<code>V</code> and <code>T</code> are identical.
-</li>
-<li>
-<code>V</code> and <code>T</code> have identical
-<a href="#Underlying_types">underlying types</a>
-but are not type parameters and at least one of <code>V</code>
-or <code>T</code> is not a <a href="#Types">named type</a>.
-</li>
-<li>
-<code>V</code> and <code>T</code> are channel types with
-identical element types, <code>V</code> is a bidirectional channel,
-and at least one of <code>V</code> or <code>T</code> is not a <a href="#Types">named type</a>.
-</li>
+* value `x` / type `V` & variable / type `T`
+  * 👀`x` is assignable -- to -- that variable, if >= 1 condition fulfill👀
+    * `V` == `T`
+      * == identical
+    * `V` & `T` have identical [underlying types](#underlying-types) BUT NOT type parameters & (`V` or `T` are NOT named type)
+    * `V` & `T` == channel types / identical element types + `V` == bidirectional channel + (>=1 of `V` or `T` NOT a named type)
+    * TODO:
 <li>
 <code>T</code> is an interface type, but not a type parameter, and
 <code>x</code> <a href="#Implementing_an_interface">implements</a> <code>T</code>.
@@ -2129,7 +2089,7 @@ x                   T           x is not representable by a value of T because
 1e1000              float64     1e1000 overflows to IEEE +Inf after rounding
 </pre>
 
-<h3 id="Method_sets">Method sets</h3>
+## Method sets
 
 <p>
 The <i>method set</i> of a type determines the methods that can be
@@ -2350,7 +2310,7 @@ appear in different <a href="#Packages">packages</a> and are not
 <a href="#Exported_identifiers">exported</a>. Otherwise, they are the same.
 </p>
 
-<h3 id="Constant_declarations">Constant declarations</h3>
+## Constant declarations
 
 <p>
 A constant declaration binds a list of identifiers (the names of
@@ -2361,13 +2321,13 @@ the left is bound to the value of the <i>n</i>th expression on the
 right.
 </p>
 
-<pre class="ebnf">
+```go
 ConstDecl      = "const" ( ConstSpec | "(" { ConstSpec ";" } ")" ) .
 ConstSpec      = IdentifierList [ [ Type ] "=" ExpressionList ] .
 
 IdentifierList = identifier { "," identifier } .
 ExpressionList = Expression { "," Expression } .
-</pre>
+```
 
 <p>
 If the type is present, all constants take the type specified, and
@@ -2419,15 +2379,23 @@ const (
 </pre>
 
 
-<h3 id="Iota">Iota</h3>
+## Iota
 
-<p>
-Within a <a href="#Constant_declarations">constant declaration</a>, the predeclared identifier
-<code>iota</code> represents successive untyped integer <a href="#Constants">
-constants</a>. Its value is the index of the respective <a href="#ConstSpec">ConstSpec</a>
-in that constant declaration, starting at zero.
-It can be used to construct a set of related constants:
-</p>
+* := predeclared identifier / 
+  * == successive constants
+    * untyped
+    * integer
+
+* uses
+  * | [constant declaration](#constant-declarations), 
+  
+* its value
+  * | constant declaration,
+    * ConstSpec's respective index /
+      * index starts -- from -- 0
+
+* use cases
+  * construct a set of related constants
 
 <pre>
 const (
@@ -2735,19 +2703,19 @@ type T5[P T4[P]] …                    //          T5 refers to T4
 type T6[P int] struct{ f *T6[P] }     // ok: reference to T6 is not in type parameter list
 </pre>
 
-<h4 id="Type_constraints">Type constraints</h4>
+### Type constraints
 
-<p>
-A <i>type constraint</i> is an <a href="#Interface_types">interface</a> that defines the
-set of permissible type arguments for the respective type parameter and controls the
-operations supported by values of that type parameter
-[<a href="#Go_1.18">Go 1.18</a>].
-</p>
-
-<pre class="ebnf">
+```go
 TypeConstraint = TypeElem .
-</pre>
+```
 
+* == interface / 
+  * define ALLOWED type arguments -- for the -- respective type parameter
+  * controls the operations -- supported by -- values of that type parameter 
+
+* [Go 1.18](#go-118)
+
+* TODO: 
 <p>
 If the constraint is an interface literal of the form <code>interface{E}</code> where
 <code>E</code> is an embedded <a href="#Interface_types">type element</a> (not a method), in a type parameter list
@@ -4158,32 +4126,10 @@ No <a href="#Run_time_panics">run-time panic</a> occurs in this case.
 
 ## Calls
 
-<p>
-Given an expression <code>f</code> with a <a href="#Core_types">core type</a>
-<code>F</code> of <a href="#Function_types">function type</a>,
-</p>
-
-<pre>
-f(a1, a2, … an)
-</pre>
-
-<p>
-calls <code>f</code> with arguments <code>a1, a2, … an</code>.
-Except for one special case, arguments must be single-valued expressions
-<a href="#Assignability">assignable</a> to the parameter types of
-<code>F</code> and are evaluated before the function is called.
-The type of the expression is the result type
-of <code>F</code>.
-A method invocation is similar but the method itself
-is specified as a selector upon a value of the receiver type for
-the method.
-</p>
-
-<pre>
-math.Atan2(x, y)  // function call
-var pt *Point
-pt.Scale(3.5)     // method call with receiver pt
-</pre>
+* EACH arguments' expression
+  * restrictions 
+    * assignable -- to the -- function's parameter types
+    * ⚠️evaluated BEFORE calling the function⚠️
 
 <p>
 If <code>f</code> denotes a generic function, it must be
@@ -5975,18 +5921,23 @@ Error: log.Panic("error encountered")
 </pre>
 
 
-<h3 id="Expression_statements">Expression statements</h3>
+## Expression statements
 
-<p>
-With the exception of specific built-in functions,
 function and method <a href="#Calls">calls</a> and
 <a href="#Receive_operator">receive operations</a>
 can appear in statement context. Such statements may be parenthesized.
-</p>
 
-<pre class="ebnf">
+```go
 ExpressionStmt = Expression .
-</pre>
+```
+
+* `Expression`
+  * ALLOWED 
+    * function & method calls
+    * receive operations
+    * wrap -- with -- `()`
+  * ❌NOT ALLOWED❌
+    * specific built-in functions
 
 <p>
 The following built-in functions are not permitted in statement context:
@@ -6006,21 +5957,23 @@ len("foo")  // illegal if len is the built-in function
 </pre>
 
 
-<h3 id="Send_statements">Send statements</h3>
+## Send statements
 
-<p>
-A send statement sends a value on a channel.
-The channel expression's <a href="#Core_types">core type</a>
+```go
+SendStmt = Channel "<-" Expression .
+Channel  = Expression .
+```
+
+* allows
+  * sends a value | channel
+
+* TODO: The channel expression's <a href="#Core_types">core type</a>
 must be a <a href="#Channel_types">channel</a>,
 the channel direction must permit send operations,
 and the type of the value to be sent must be <a href="#Assignability">assignable</a>
 to the channel's element type.
-</p>
 
-<pre class="ebnf">
-SendStmt = Channel "&lt;-" Expression .
-Channel  = Expression .
-</pre>
+
 
 <p>
 Both the channel and the value expression are evaluated before communication
@@ -6036,7 +5989,7 @@ ch &lt;- 3  // send value 3 to channel ch
 </pre>
 
 
-<h3 id="IncDec_statements">IncDec statements</h3>
+## IncDec statements
 
 <p>
 The "++" and "--" statements increment or decrement their operands
@@ -6756,44 +6709,30 @@ for u = range 256 {
 </pre>
 
 
-<h3 id="Go_statements">Go statements</h3>
+## Go statements
 
-<p>
-A "go" statement starts the execution of a function call
-as an independent concurrent thread of control, or <i>goroutine</i>,
-within the same address space.
-</p>
-
-<pre class="ebnf">
+```go
 GoStmt = "go" Expression .
-</pre>
+```
+* `Expression`
+  * requirements
+    * function call OR
+    * method call
+    * NOT wrap -- with -- `()`
+  * ❌NOT ALLOWED❌
+    * specific built-in functions
+  * ⚠️ALTHOUGH Expression returns something -> discarded⚠️
 
-<p>
-The expression must be a function or method call; it cannot be parenthesized.
-Calls of built-in functions are restricted as for
-<a href="#Expression_statements">expression statements</a>.
-</p>
+* execution |
+  * 💡independent concurrent thread OR💡
+  * ⚠️SAME address space⚠️
 
-<p>
-The function value and parameters are
-<a href="#Calls">evaluated as usual</a>
-in the calling goroutine, but
-unlike with a regular call, program execution does not wait
-for the invoked function to complete.
-Instead, the function begins executing independently
-in a new goroutine.
-When the function terminates, its goroutine also terminates.
-If the function has any return values, they are discarded when the
-function completes.
-</p>
+* program execution
+  * ❌NOT wait / goroutine is completed❌
+  * 👀function's value & parameters are evaluated | main goroutine👀
+    * NOT | NEW goroutine
 
-<pre>
-go Server()
-go func(ch chan&lt;- bool) { for { sleep(10); ch &lt;- true }} (c)
-</pre>
-
-
-<h3 id="Select_statements">Select statements</h3>
+## Select statements
 
 <p>
 A "select" statement chooses which of a set of possible
@@ -6902,7 +6841,7 @@ select {}  // block forever
 </pre>
 
 
-<h3 id="Return_statements">Return statements</h3>
+## Return statements
 
 <p>
 A "return" statement in a function <code>F</code> terminates the execution
@@ -7135,22 +7074,31 @@ FallthroughStmt = "fallthrough" .
 </pre>
 
 
-<h3 id="Defer_statements">Defer statements</h3>
+## Defer statements
 
-<p>
-A "defer" statement invokes a function whose execution is deferred
-to the moment the surrounding function returns, either because the
-surrounding function executed a <a href="#Return_statements">return statement</a>,
-reached the end of its <a href="#Function_declarations">function body</a>,
-or because the corresponding goroutine is <a href="#Handling_panics">panicking</a>.
-</p>
-
-<pre class="ebnf">
+```go
 DeferStmt = "defer" Expression .
-</pre>
+```
+* `Expression` 
+  * ALLOWED
+    * function call
+    * method call
+  * ❌NOT ALLOWED❌
+    * wrap with `()`
 
+* "defer" statement 
+  * allows
+    * | invoke a function,
+      * 👀function's execution is deferred -- TILL -- the ⚠️surrounding function returns⚠️👀
+
+* 👀ways / surrounding function returns👀
+  * surrounding function
+    * executes a [return statement](#return-statements) OR
+    * reached its [function body](#function-declarations) end OR
+  * corresponding goroutine [panicking](#handling-panics)
+
+* TODO: 
 <p>
-The expression must be a function or method call; it cannot be parenthesized.
 Calls of built-in functions are restricted as for
 <a href="#Expression_statements">expression statements</a>.
 </p>
@@ -7201,7 +7149,7 @@ func f() (result int) {
 }
 </pre>
 
-<h2 id="Built-in_functions">Built-in functions</h2>
+# Built-in functions
 
 <p>
 Built-in functions are
@@ -7646,81 +7594,29 @@ min(x, y, z) == min(min(x, y), z)
 
 ## Handling panics
 
-<p> Two built-in functions, <code>panic</code> and <code>recover</code>,
-assist in reporting and handling <a href="#Run_time_panics">run-time panics</a>
-and program-defined error conditions.
-</p>
+* built-in functions,
+  ```
+  func panic(interface{})
+  func recover() interface{}
+  ```
+  * allows
+    * assist | report & handle 
+      * [run-time panics](#run-time-panics)
+      * program-defined error conditions
 
-<pre class="grammar">
-func panic(interface{})
-func recover() interface{}
-</pre>
+* 👀if panic happens -> terminates the execution of the function👀
 
-<p>
-While executing a function <code>F</code>,
-an explicit call to <code>panic</code> or a <a href="#Run_time_panics">run-time panic</a>
-terminates the execution of <code>F</code>.
-Any functions <a href="#Defer_statements">deferred</a> by <code>F</code>
-are then executed as usual.
-Next, any deferred functions run by <code>F</code>'s caller are run,
-and so on up to any deferred by the top-level function in the executing goroutine.
-At that point, the program is terminated and the error
-condition is reported, including the value of the argument to <code>panic</code>.
-This termination sequence is called <i>panicking</i>.
-</p>
+* panicking
+  * == termination sequence
+    * _Example:_ [handling-panic-terminationsequence](examples/handling-panic-terminationsequence.go)
 
-<pre>
-panic(42)
-panic("unreachable")
-panic(Error("cannot parse"))
-</pre>
+* `recover()`
+  * allows 
+    * a program can manage panicking goroutine's behaviour
+      * == keep on goroutine's execution
+  * if the goroutine is NOT panicking -> return `nil`
 
-<p>
-The <code>recover</code> function allows a program to manage behavior
-of a panicking goroutine.
-Suppose a function <code>G</code> defers a function <code>D</code> that calls
-<code>recover</code> and a panic occurs in a function on the same goroutine in which <code>G</code>
-is executing.
-When the running of deferred functions reaches <code>D</code>,
-the return value of <code>D</code>'s call to <code>recover</code> will be the value passed to the call of <code>panic</code>.
-If <code>D</code> returns normally, without starting a new
-<code>panic</code>, the panicking sequence stops. In that case,
-the state of functions called between <code>G</code> and the call to <code>panic</code>
-is discarded, and normal execution resumes.
-Any functions deferred by <code>G</code> before <code>D</code> are then run and <code>G</code>'s
-execution terminates by returning to its caller.
-</p>
-
-<p>
-The return value of <code>recover</code> is <code>nil</code> when the
-goroutine is not panicking or <code>recover</code> was not called directly by a deferred function.
-Conversely, if a goroutine is panicking and <code>recover</code> was called directly by a deferred function,
-the return value of <code>recover</code> is guaranteed not to be <code>nil</code>.
-To ensure this, calling <code>panic</code> with a <code>nil</code> interface value (or an untyped <code>nil</code>)
-causes a <a href="#Run_time_panics">run-time panic</a>.
-</p>
-
-<p>
-The <code>protect</code> function in the example below invokes
-the function argument <code>g</code> and protects callers from
-run-time panics raised by <code>g</code>.
-</p>
-
-<pre>
-func protect(g func()) {
-	defer func() {
-		log.Println("done")  // Println executes normally even if there is a panic
-		if x := recover(); x != nil {
-			log.Printf("run time panic: %v", x)
-		}
-	}()
-	log.Println("start")
-	g()
-}
-</pre>
-
-
-<h3 id="Bootstrapping">Bootstrapping</h3>
+## Bootstrapping
 
 <p>
 Current implementations provide several built-in functions useful during
@@ -8114,29 +8010,14 @@ For instance, a function to read data from a file might be defined:
 func Read(f *File, b []byte) (n int, err error)
 </pre>
 
-<h2 id="Run_time_panics">Run-time panics</h2>
+# Run-time panics
 
-<p>
-Execution errors such as attempting to index an array out
-of bounds trigger a <i>run-time panic</i> equivalent to a call of
-the built-in function <a href="#Handling_panics"><code>panic</code></a>
-with a value of the implementation-defined interface type <code>runtime.Error</code>.
-That type satisfies the predeclared interface type
-<a href="#Errors"><code>error</code></a>.
-The exact error values that
-represent distinct run-time error conditions are unspecified.
-</p>
+* use cases / trigger them
+  * execution errors
+    * _Example:_ array[indexOutOfBounds]
+  * call DIRECTLY [`panic(runtime.Error's value)`](#handling-panics)
 
-<pre>
-package runtime
-
-type Error interface {
-	error
-	// and perhaps other methods
-}
-</pre>
-
-## System considerations
+# System considerations
 
 ## Package `unsafe`
 
