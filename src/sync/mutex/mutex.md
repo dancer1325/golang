@@ -25,6 +25,8 @@
     * tries to lock `m` & reports whether it succeeded
       * if it was ALREADY locked -> returns `false`
     * rarely used
+  * `sema  uint32`
+    * names after "semaphore"
 
 * TODO:
 
