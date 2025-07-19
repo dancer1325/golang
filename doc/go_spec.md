@@ -1044,74 +1044,30 @@ Moreover, the inner slices must be initialized individually.
 
 ## Struct types
 
-<p>
-A struct is a sequence of named elements, called fields, each of which has a
-name and a type. Field names may be specified explicitly (IdentifierList) or
-implicitly (EmbeddedField).
-Within a struct, non-<a href="#Blank_identifier">blank</a> field names must
-be <a href="#Uniqueness_of_identifiers">unique</a>.
-</p>
+* struct
+  * == sequence of named elements == sequence of fields /
+    * EACH field == name + type
+    * ⚠️NON-[blank](#blank-identifier----_---) field names MUST be [unique](#uniqueness-of-identifiers) | EACH struct⚠️
 
-<pre class="ebnf">
+```go
 StructType    = "struct" "{" { FieldDecl ";" } "}" .
 FieldDecl     = (IdentifierList Type | EmbeddedField) [ Tag ] .
+	// IdentifierList  ==  explicitly    OR  EmbeddedField  ==  implicitly 
 EmbeddedField = [ "*" ] TypeName [ TypeArgs ] .
 Tag           = string_lit .
-</pre>
+```
 
-<pre>
-// An empty struct.
-struct {}
+* embedded field
+  * == field / type declared & ❌NO explicit field name❌
+    * unqualified type name == field name
+  * ways to specify it
+    * type name OR 
+    * pointer -- to a -- NON-interface type name
 
-// A struct with 6 fields.
-struct {
-	x, y int
-	u float32
-	_ float32  // padding
-	A *[]int
-	F func()
-}
-</pre>
+* promoted field
+  * := struct's (`x`) embedded field's field OR method (`f`) / `x.f` == selector of that field OR method
 
-<p>
-A field declared with a type but no explicit field name is called an <i>embedded field</i>.
-An embedded field must be specified as
-a type name <code>T</code> or as a pointer to a non-interface type name <code>*T</code>,
-and <code>T</code> itself may not be
-a pointer type. The unqualified type name acts as the field name.
-</p>
-
-<pre>
-// A struct with four embedded fields of types T1, *T2, P.T3 and *P.T4
-struct {
-	T1        // field name is T1
-	*T2       // field name is T2
-	P.T3      // field name is T3
-	*P.T4     // field name is T4
-	x, y int  // field names are x and y
-}
-</pre>
-
-<p>
-The following declaration is illegal because field names must be unique
-in a struct type:
-</p>
-
-<pre>
-struct {
-	T     // conflicts with embedded field *T and *P.T
-	*T    // conflicts with embedded field T and *P.T
-	*P.T  // conflicts with embedded field T and *T
-}
-</pre>
-
-<p>
-A field or <a href="#Method_declarations">method</a> <code>f</code> of an
-embedded field in a struct <code>x</code> is called <i>promoted</i> if
-<code>x.f</code> is a legal <a href="#Selectors">selector</a> that denotes
-that field or method <code>f</code>.
-</p>
-
+* TODO:
 <p>
 Promoted fields act like ordinary fields
 of a struct except that they cannot be used as field names in
@@ -2283,7 +2239,7 @@ Functions:
 	make max min new panic print println real recover
 </pre>
 
-<h3 id="Exported_identifiers">Exported identifiers</h3>
+## Exported identifiers
 
 <p>
 An identifier may be <i>exported</i> to permit access to it from another package.
@@ -2300,7 +2256,7 @@ An identifier is exported if both:
 All other identifiers are not exported.
 </p>
 
-<h3 id="Uniqueness_of_identifiers">Uniqueness of identifiers</h3>
+## Uniqueness of identifiers
 
 <p>
 Given a set of identifiers, an identifier is called <i>unique</i> if it is
@@ -2600,62 +2556,18 @@ TypeParamDecl   = IdentifierList TypeConstraint .
 ```
 
 * type parameter list
-  * uses
-    * type parameters | 👀generic function OR generic type declaration👀
-  * vs function parameter list
-    except that the type parameter names must all be present and the list is enclosed
-    in square brackets rather than parentheses
-    [Go 1.18](#go-118)
+  * uses | 
+    * generic function
+      * ⚠️!= function parameter list ⚠️
+    * generic type declaration
+  * how to use?
+    * | instantiate generic function OR generic type,
+      * 👀replaced -- with the -- type argument👀
 
-```go
-// 1. TypeParameters | generic functions
-// 1.1   1 type parameter
-func Print[T any](value T) {
-    fmt.Println(value)
-}
+* `IdentifierList`
+  * ⚠️non-blank names, MUST be unique ⚠️
 
-// 1.2   MULTIPLE type parameter
-func MapKeys[K comparable, V any](m map[K]V) []K {
-    keys := make([]K, 0, len(m))
-    for k := range m {
-        keys = append(keys, k)
-    }
-    return keys
-}
-
-// 2. TypeParameters | generic types
-// 2.1   1 type parameter
-type Stack[T any] struct {
-  items []T
-}
-
-// 2.2   MULTIPLE type parameter
-type Cache[K comparable, V any] struct {
-  data map[K]V
-}
-```
-
-* non-blank names | list
-  * MUST be unique
-  Each name declares a type parameter, which is a new and different <a href="#Types">named type</a>
-  that acts as a placeholder for an (as of yet) unknown type in the declaration.
-  The type parameter is replaced with a <i>type argument</i> upon
-  <a href="#Instantiations">instantiation</a> of the generic function or type.
-
-```go
-[P any]
-[S interface{ ~[]byte|string }]
-[S ~[]E, E any]
-[P Constraint[int]]
-[_ any]
-```
-
-<p>
-Just as each ordinary function parameter has a parameter type, each type parameter
-has a corresponding (meta-)type which is called its
-<a href="#Type_constraints"><i>type constraint</i></a>.
-</p>
-
+* TODO:
 <p>
 A parsing ambiguity arises when the type parameter list for a generic type
 declares a single type parameter <code>P</code> with a constraint <code>C</code>
@@ -2710,31 +2622,13 @@ TypeConstraint = TypeElem .
 ```
 
 * == interface / 
-  * define ALLOWED type arguments -- for the -- respective type parameter
-  * controls the operations -- supported by -- values of that type parameter 
+  * define ALLOWED type parameter's type arguments 
+  * controls the operations -- supported by -- that type parameter's values
+  * 👀if interface literal's form == `interface{E}` / `E` == embedded type element -> `interface{ … }` may be omitted👀
+* use cases
+  * 👀[type parameter](#type-parameter-declarations)'s meta-type👀
 
-* [Go 1.18](#go-118)
-
-* TODO: 
-<p>
-If the constraint is an interface literal of the form <code>interface{E}</code> where
-<code>E</code> is an embedded <a href="#Interface_types">type element</a> (not a method), in a type parameter list
-the enclosing <code>interface{ … }</code> may be omitted for convenience:
-</p>
-
-<pre>
-[T []P]                      // = [T interface{[]P}]
-[T ~int]                     // = [T interface{~int}]
-[T int|string]               // = [T interface{int|string}]
-type Constraint ~int         // illegal: ~int is not in a type parameter list
-</pre>
-
-<!--
-We should be able to simplify the rules for comparable or delegate some of them
-elsewhere since we have a section that clearly defines how interfaces implement
-other interfaces based on their type sets. But this should get us going for now.
--->
-
+* TODO:
 <p>
 The <a href="#Predeclared_identifiers">predeclared</a>
 <a href="#Interface_types">interface type</a> <code>comparable</code>
@@ -2930,19 +2824,11 @@ FunctionName = identifier .
 FunctionBody = Block .
 ```
 
-* if the `Signature` == result parameters -> `[ FunctionBody ]` MUST end in [terminating statement](#terminating-statements)
+* if the `Signature` has result parameters -> `[ FunctionBody ]` MUST end in [terminating statement](#terminating-statements)
+* cases / NO declared `FunctionBody`
+  * declare interface
 
-```go
-func IndexRune(s string, r rune) int {
-	for i, c := range s {
-		if c == r {
-			return i
-		}
-	}
-	// invalid: missing return statement
-}
-```
-
+* TODO: 
 <p>
 If the function declaration specifies <a href="#Type_parameter_declarations">type parameters</a>,
 the function name denotes a <i>generic function</i>.
@@ -2969,7 +2855,7 @@ such as an assembly routine.
 func flushICache(begin, end uintptr)  // implemented externally
 </pre>
 
-<h3 id="Method_declarations">Method declarations</h3>
+## Method declarations
 
 <p>
 A method is a <a href="#Function_declarations">function</a> with a <i>receiver</i>.
@@ -3090,26 +2976,16 @@ OperandName = identifier | QualifiedIdent .
 
 ## Qualified identifiers
 
-<p>
-A <i>qualified identifier</i> is an identifier qualified with a package name prefix.
-Both the package name and the identifier must not be
-<a href="#Blank_identifier">blank</a>.
-</p>
-
-<pre class="ebnf">
+```go
 QualifiedIdent = PackageName "." identifier .
-</pre>
+	// PackageName & identifier MUST NOT be blank identifier 
+```
 
-<p>
-A qualified identifier accesses an identifier in a different package, which
-must be <a href="#Import_declarations">imported</a>.
-The identifier must be <a href="#Exported_identifiers">exported</a> and
-declared in the <a href="#Blocks">package block</a> of that package.
-</p>
-
-<pre>
-math.Sin // denotes the Sin function in package math
-</pre>
+* requirements
+  * [import](#import-declarations) the package
+  * identifier MUST be 
+    * [exported](#exported-identifiers)
+    * declared | [package's block](#blocks)
 
 ## Composite literals
 
@@ -3355,11 +3231,9 @@ as they are accessible.
 
 ## Primary expressions
 
-<p>
-Primary expressions are the operands for unary and binary expressions.
-</p>
+* := operands -- for -- unary & binary expressions
 
-<pre class="ebnf">
+```go
 PrimaryExpr =
 	Operand |
 	Conversion |
@@ -3376,21 +3250,7 @@ Slice          = "[" [ Expression ] ":" [ Expression ] "]" |
                  "[" [ Expression ] ":" Expression ":" Expression "]" .
 TypeAssertion  = "." "(" Type ")" .
 Arguments      = "(" [ ( ExpressionList | Type [ "," ExpressionList ] ) [ "..." ] [ "," ] ] ")" .
-</pre>
-
-
-<pre>
-x
-2
-(s + ".txt")
-f(3.1415, true)
-Point{1, 2}
-m["foo"]
-s[i : j + 1]
-obj.color
-f.p[i].x()
-</pre>
-
+```
 
 ## Selectors
 
@@ -7688,7 +7548,7 @@ A set of files sharing the same PackageName form the implementation of a package
 An implementation may require that all source files for a package inhabit the same directory.
 </p>
 
-<h3 id="Import_declarations">Import declarations</h3>
+## Import declarations
 
 <p>
 An import declaration states that the source file containing the declaration
