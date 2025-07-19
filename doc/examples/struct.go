@@ -49,6 +49,9 @@ func main() {
 
 	// 4. struct 	INVALID, because embedded field names are NOT unique
 	invalidStruct()
+
+	// 5. struct -- with -- tags
+	structWithTags()
 }
 
 func viaStruct() {
@@ -121,4 +124,16 @@ func invalidStruct() {
 		*T    		// conflicts with embedded field T & *P.T
 		*P.T  		// conflicts with embedded field T & *T
 	}*/
+}
+
+func structWithTags() {
+	variableBasedOnStructWithTags := struct {
+		x, y float64 "" // empty tag string == absent tag
+		name string  "any string is permitted as a tag"
+	}{
+		x:    3.4,
+		y:    4.5,
+		name: "struct with tags",
+	}
+	fmt.Println("structWithTags: ", variableBasedOnStructWithTags)
 }

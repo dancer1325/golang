@@ -546,7 +546,7 @@ escaped_char     = `\` ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | `\` | "'" | `
 </pre>
 
 
-<h3 id="String_literals">String literals</h3>
+## String literals
 
 <p>
 A string literal represents a <a href="#Constants">string constant</a>
@@ -585,11 +585,11 @@ the two bytes <code>0xc3</code> <code>0xbf</code> of the UTF-8 encoding of chara
 U+00FF.
 </p>
 
-<pre class="ebnf">
+```
 string_lit             = raw_string_lit | interpreted_string_lit .
 raw_string_lit         = "`" { unicode_char | newline } "`" .
 interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
-</pre>
+```
 
 <pre>
 `abc`                // same as "abc"
@@ -1095,30 +1095,13 @@ Given a struct type <code>S</code> and a <a href="#Types">named type</a>
 	</li>
 </ul>
 
-<p>
-A field declaration may be followed by an optional string literal <i>tag</i>,
-which becomes an attribute for all the fields in the corresponding
-field declaration. An empty tag string is equivalent to an absent tag.
-The tags are made visible through a <a href="/pkg/reflect/#StructTag">reflection interface</a>
-and take part in <a href="#Type_identity">type identity</a> for structs
-but are otherwise ignored.
-</p>
-
-<pre>
-struct {
-	x, y float64 ""  // an empty tag string is like an absent tag
-	name string  "any string is permitted as a tag"
-	_    [4]byte "ceci n'est pas un champ de structure"
-}
-
-// A struct corresponding to a TimeStamp protocol buffer.
-// The tag strings define the protocol buffer field numbers;
-// they follow the convention outlined by the reflect package.
-struct {
-	microsec  uint64 `protobuf:"1"`
-	serverIP6 uint64 `protobuf:"2"`
-}
-</pre>
+* `Tag           = string_lit .`
+  * OPTIONAL
+  * == field declaration's ALL fields' attribute
+  * if `""` == absent tag
+  * if you want to make it visible -> through [reflection interface](https://pkg.go.dev/reflect#StructTag)
+  * uses
+    * structs' [type identity](#type-identity)
 
 <p>
 A struct type <code>T</code> may not contain a field of type <code>T</code>,
