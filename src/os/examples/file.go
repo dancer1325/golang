@@ -16,6 +16,9 @@ func main() {
 
 	// 3. io.Writer implemented by File
 	ioWriterImplementedByFile()
+
+	// 4. Mkdir example
+	createDirectory()
 }
 
 func readFileData(fileName string) {
@@ -63,4 +66,24 @@ func ioWriterImplementedByFile() {
 	logOutput := os.Stdout // *os.File
 	output := io.Writer(logOutput)
 	fmt.Printf("writeData - %v\n", output)
+}
+
+func createDirectory() {
+	dirName := "testdir"
+
+	// create a directory -- with -- permissions 0755 (rwxr-xr-x) (== BEFORE umask)
+	err := os.Mkdir(dirName, 0755)
+	if err != nil {
+		fmt.Printf("Error creating the directory: %v\n", err)
+	} else {
+		fmt.Printf("Directory with name '%s' created\n", dirName)
+	}
+
+	// check directory's information 		-- Reason:🧠check real permissions🧠 --
+	info, err := os.Stat(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Directory permissions: %v\n", info.Mode())
+
 }

@@ -33,4 +33,8 @@
     * error encountered
       * if `n != len(b)` -> returns non-nil error 
 
+* `func Mkdir(name string, perm FileMode) error {}`
+  * creates a NEW directory / specified name & permission bits (BEFORE umask)
+  * if there is an error -> `*PathError` type
+
 * TODO:
