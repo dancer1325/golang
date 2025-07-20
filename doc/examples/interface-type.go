@@ -17,7 +17,7 @@ func main() {
 	// 2.1 empty
 	var value interface{}
 
-	// include ALL types
+	// 2.1.1 implemented -- by -- ALL types
 	value = 42
 	fmt.Printf("value = %v (tipo: %T)\n", value, value)
 
@@ -27,25 +27,25 @@ func main() {
 	value = []int{1, 2, 3}
 	fmt.Printf("value = %v (tipo: %T)\n", value, value)
 
-	fmt.Println("\n=== 2. VARIABLE NO INICIALIZADA ===")
+	// 2.1.2 NOT initialized
 
 	var uninit interface{}
 	fmt.Printf("uninit == nil: %v\n", uninit == nil)
 
+	// 3. TODO: check from here
 	fmt.Println("\n=== 3. INTERFACE CON MÉTODOS ===")
 
-	// Interface con MethodElem
+	// Interface with MethodElem
 	var writer interface {
 		Write([]byte) (int, error)
 	}
 
-	// Implementación
+	// implementation
 	writer = &FileWriter{}
 	writer.Write([]byte("Hello"))
-
 	fmt.Println("\n=== 4. INTERFACE CON TYPE ELEMENTS (Go 1.18+) ===")
 
-	// Interface con TypeElem (union types)
+	// interface with TypeElem (union types)
 	var numeric interface {
 		int | float64 | string
 	}
@@ -62,7 +62,7 @@ func main() {
 
 	fmt.Println("\n=== 5. INTERFACE MIXTA ===")
 
-	// Interface con MethodElem + TypeElem
+	// interface with MethodElem + TypeElem
 	var constraint interface {
 		~int | ~string  // TypeElem
 		String() string // MethodElem
@@ -82,7 +82,7 @@ func main() {
 	fmt.Printf("complex type: %T\n", complex)
 }
 
-// Tipos de apoyo
+// implementation of Writer
 type FileWriter struct{}
 
 func (f *FileWriter) Write(data []byte) (int, error) {

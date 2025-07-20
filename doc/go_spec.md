@@ -1268,21 +1268,16 @@ then the <code>File</code> interface is implemented by both <code>S1</code> and
 <code>S1</code> and <code>S2</code> may have or share.
 </p>
 
-<p>
-Every type that is a member of the type set of an interface implements that interface.
-Any given type may implement several distinct interfaces.
-For instance, all types implement the <i>empty interface</i> which stands for the set
-of all (non-interface) types:
-</p>
+* every type 
+  * / (TODO:) member of the type set of an interface implements that interface.
+  * may implement SEVERAL DISTINT interfaces
 
-<pre>
-interface{}
-</pre>
-
-<p>
-For convenience, the predeclared type <code>any</code> is an alias for the empty interface.
-[<a href="#Go_1.18">Go 1.18</a>]
-</p>
+* empty interface -- `interface {}` --
+  * == set of ALL (NON-interface) types 
+  * implemented -- by -- ALL types
+  * `any`
+    * 💡alias of it💡
+    * [Go 1.18](#go-118)
 
 <p>
 Similarly, consider this interface specification,
@@ -1311,7 +1306,7 @@ they implement the <code>Locker</code> interface as well
 as the <code>File</code> interface.
 </p>
 
-<h4 id="Embedded_interfaces">Embedded interfaces</h4>
+### Embedded interfaces
 
 <p>
 In a slightly more general form
