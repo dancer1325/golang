@@ -19,6 +19,9 @@ func main() {
 
 	// 4. Mkdir example
 	createDirectory()
+
+	// 5. Stat()
+	checkStat()
 }
 
 func readFileData(fileName string) {
@@ -86,4 +89,15 @@ func createDirectory() {
 	}
 	fmt.Printf("Directory permissions: %v\n", info.Mode())
 
+}
+
+func checkStat() {
+	info, _ := os.Stat("file.go")
+	fmt.Println("Stat() - info ", info)
+	fmt.Println("Stat() - info.Name() ", info.Name())
+	fmt.Println("Stat() - info.Size() ", info.Size())
+	fmt.Println("Stat() - info.Mode() ", info.Mode())
+	fmt.Println("Stat() - info.ModTime() ", info.ModTime())
+	fmt.Println("Stat() - info.IsDir() ", info.IsDir())
+	fmt.Println("Stat() - info.Sys() ", info.Sys())
 }

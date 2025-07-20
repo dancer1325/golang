@@ -5,4 +5,7 @@
   * `*file`
     * OS specific
 
+* `type FileInfo = fs.FileInfo`
+  * == file / returned -- by -- `Stat` & `Lstat`
+
 * TODO:
