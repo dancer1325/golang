@@ -2,17 +2,28 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 )
 
 func main() {
 	// 1. read file's data
-	readFileData()
+	readFileData("")
+
+	// 2. Write(b []byte) (n int, err error)
+	writeFile()
+
+	// 3. io.Writer implemented by File
+	ioWriterImplementedByFile()
 }
 
-func readFileData() {
-	file, err := os.Open("file.go")
+func readFileData(fileName string) {
+	fileNameToRead := fileName
+	if fileNameToRead == "" {
+		fileNameToRead = "file.go"
+	}
+	file, err := os.Open(fileNameToRead)
 	if file != nil {
 		fmt.Println("Opened file")
 	}
@@ -26,4 +37,30 @@ func readFileData() {
 		log.Fatal(err)
 	}
 	fmt.Printf("read %d bytes: %q\n", count, data[:count]) // read bytes are stored | data
+}
+
+func writeFile() {
+	// create a NEW file OR modify EXISTING one
+	file, err := os.Create("example.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close() // | exit the function, close the file
+
+	// write bytes DIRECTLY | file
+	data := []byte("Hello an example of File.Write\n")
+	n, err := file.Write(data) // n == NUMBER of bytes written
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Wrote %d bytes | file\n", n)
+
+	// check written file
+	readFileData("example.txt")
+}
+
+func ioWriterImplementedByFile() {
+	logOutput := os.Stdout // *os.File
+	output := io.Writer(logOutput)
+	fmt.Printf("writeData - %v\n", output)
 }

@@ -26,4 +26,11 @@
       * returns 0
         * == EOF
 
+* `func (f *File) Write(b []byte) (n int, err error) {}`
+  * writes `b`'s `len(b)` bytes | `f`
+  * returns
+    * number of bytes written | `f` &
+    * error encountered
+      * if `n != len(b)` -> returns non-nil error 
+
 * TODO:
