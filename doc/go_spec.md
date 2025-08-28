@@ -5995,38 +5995,17 @@ to the type of the operand to which it is assigned, with the following special c
 
 ## If statements
 
-<p>
-"If" statements specify the conditional execution of two branches
-according to the value of a boolean expression.  If the expression
-evaluates to true, the "if" branch is executed, otherwise, if
-present, the "else" branch is executed.
-</p>
+* == conditional execution of 2 branches
+  * "if" branch
+  * "else" branch
 
-<pre class="ebnf">
+```go
 IfStmt = "if" [ SimpleStmt ";" ] Expression Block [ "else" ( IfStmt | Block ) ] .
-</pre>
+```
 
-<pre>
-if x &gt; max {
-	x = max
-}
-</pre>
-
-<p>
-The expression may be preceded by a simple statement, which
-executes before the expression is evaluated.
-</p>
-
-<pre>
-if x := f(); x &lt; y {
-	return x
-} else if x &gt; z {
-	return z
-} else {
-	return y
-}
-</pre>
-
+* `SimpleStmt`
+  * OPTIONAL
+  * executed | BEFORE evaluation the expression
 
 ## Switch statements
 
