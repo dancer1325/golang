@@ -3,53 +3,26 @@ title: "Go, Backwards Compatibility, and GODEBUG"
 layout: article
 ---
 
-<!--
-This document is kept in the Go repo, not x/website,
-because it documents the full list of known GODEBUG settings,
-which are tied to a specific release.
--->
+* goal
+  * GODEBUG settings / specific release
 
 ## Introduction {#intro}
 
-Go's emphasis on backwards compatibility is one of its key strengths.
-There are, however, times when we cannot maintain complete compatibility.
-If code depends on buggy (including insecure) behavior,
-then fixing the bug will break that code.
-New features can also have similar impacts:
-enabling the HTTP/2 use by the HTTP client broke programs
-connecting to servers with buggy HTTP/2 implementations.
-These kinds of changes are unavoidable and
-[permitted by the Go 1 compatibility rules](/doc/go1compat).
-Even so, Go provides a mechanism called GODEBUG to
-reduce the impact such changes have on Go developers
-using newer toolchains to compile old code.
+* Go's goal
+  * backwards compatibility
+    * ALTHOUGH, SOME times, 
+      * ❌NOT POSSIBLE❌
+      * follow [Go 1 compatibility rules](https://go.dev/blog/compat)
 
-A GODEBUG setting is a `key=value` pair
-that controls the execution of certain parts of a Go program.
-The environment variable `GODEBUG`
-can hold a comma-separated list of these settings.
-For example, if a Go program is running in an environment that contains
+* `GODEBUG`
+  * == environment variable 
+  * == 👀`key1=value1,key2=value2,...` pair👀 /
+    * controls the execution of Go program's certain parts
+    * _Example:_ `GODEBUG=http2client=0,http2server=0`
+  * 👀reduce the non-backwards compatibility impact👀
+    * Reason: 🧠compile old code -- via -- newer toolchains🧠
 
-	GODEBUG=http2client=0,http2server=0
-
-then that Go program will disable the use of HTTP/2 by default in both
-the HTTP client and the HTTP server.
-It is also possible to set the default `GODEBUG` for a given program
-(discussed below).
-
-When preparing any change that is permitted by Go 1 compatibility
-but may nonetheless break some existing programs,
-we first engineer the change to keep as many existing programs working as possible.
-For the remaining programs,
-we define a new GODEBUG setting that
-allows individual programs to opt back in to the old behavior.
-A GODEBUG setting may not be added if doing so is infeasible,
-but that should be extremely rare.
-
-GODEBUG settings added for compatibility will be maintained
-for a minimum of two years (four Go releases).
-Some, such as `http2client` and `http2server`,
-will be maintained much longer, even indefinitely.
+* TODO:
 
 When possible, each GODEBUG setting has an associated
 [runtime/metrics](/pkg/runtime/metrics/) counter
