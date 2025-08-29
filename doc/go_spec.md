@@ -2085,32 +2085,34 @@ StatementList = { Statement ";" } .
 # Declarations and scope
 
 * declaration
-  * binds a non-<a href="#Blank_identifier">blank</a> identifier to a
-  <a href="#Constant_declarations">constant</a>,
-  <a href="#Type_declarations">type</a>,
-  <a href="#Type_parameter_declarations">type parameter</a>,
-  <a href="#Variable_declarations">variable</a>,
-  <a href="#Function_declarations">function</a>,
-  <a href="#Labeled_statements">label</a>, or
-  <a href="#Import_declarations">package</a>.
-  Every identifier in a program must be declared.
-  No identifier may be declared twice in the same block, and
-  no identifier may be declared in both the file and package block.
+  * == 👀non-[blank identifier](#blank-identifier----_---)
+    * is bound -- to a --
+      * [constant](#constant-declarations)
+      * [type](#type-declarations)
+      * [type parameter](#type-parameter-declarations)
+      * [variable](#variable-declarations)
+      * [function](#function-declarations)
+      * [label](#labeled_statements)
+      * [package](#import-declarations)👀
+    * Reason of non-`_`: 🧠`_` NOT introduce a binding🧠
 
+* program's identifier
+  * ⚠️must be declared⚠️
+  * ❌INVALID to declare 
+    * twice | SAME block❌
+    * | file & package block❌
 
-<p>
-The <a href="#Blank_identifier">blank identifier</a> may be used like any other identifier
-in a declaration, but it does not introduce a binding and thus is not declared.
-In the package block, the identifier <code>init</code> may only be used for
-<a href="#Package_initialization"><code>init</code> function</a> declarations,
-and like the blank identifier it does not introduce a new binding.
-</p>
+* `init` identifier
+  * uses
+    * ONLY | [`init` function declarations](#package-initialization)
+  * ❌NOT introduce a NEW binding❌
 
-<pre class="ebnf">
+```text
 Declaration   = ConstDecl | TypeDecl | VarDecl .
 TopLevelDecl  = Declaration | FunctionDecl | MethodDecl .
-</pre>
+```
 
+* TODO:
 <p>
 The <i>scope</i> of a declared identifier is the extent of source text in which
 the identifier denotes the specified constant, type, variable, function, label, or package.
@@ -2165,7 +2167,7 @@ declarations.
 </p>
 
 
-<h3 id="Label_scopes">Label scopes</h3>
+## Label scopes
 
 <p>
 Labels are declared by <a href="#Labeled_statements">labeled statements</a> and are
