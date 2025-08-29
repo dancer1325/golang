@@ -5643,13 +5643,11 @@ In the expression <code>x + (y + z)</code> the addition <code>y + z</code>
 is performed before adding <code>x</code>.
 </p>
 
-<h2 id="Statements">Statements</h2>
+# Statements
 
-<p>
-Statements control execution.
-</p>
+* Statements control execution
 
-<pre class="ebnf">
+```text
 Statement =
 	Declaration | LabeledStmt | SimpleStmt |
 	GoStmt | ReturnStmt | BreakStmt | ContinueStmt | GotoStmt |
@@ -5657,7 +5655,7 @@ Statement =
 	DeferStmt .
 
 SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | ShortVarDecl .
-</pre>
+```
 
 ## Terminating statements
 
@@ -5751,22 +5749,18 @@ EmptyStmt = .
 </pre>
 
 
-<h3 id="Labeled_statements">Labeled statements</h3>
+## Labeled_statements
 
-<p>
-A labeled statement may be the target of a <code>goto</code>,
-<code>break</code> or <code>continue</code> statement.
-</p>
+* labeled statement
+  * ALLOWED values
+    * `goto`'s target
+    * `break`'s target
+    * `continue`'s target
 
-<pre class="ebnf">
+```text
 LabeledStmt = Label ":" Statement .
 Label       = identifier .
-</pre>
-
-<pre>
-Error: log.Panic("error encountered")
-</pre>
-
+```
 
 ## Expression statements
 
