@@ -2248,16 +2248,12 @@ appear in different <a href="#Packages">packages</a> and are not
 
 ## Constant declarations
 
-<p>
-A constant declaration binds a list of identifiers (the names of
-the constants) to the values of a list of <a href="#Constant_expressions">constant expressions</a>.
-The number of identifiers must be equal
-to the number of expressions, and the <i>n</i>th identifier on
-the left is bound to the value of the <i>n</i>th expression on the
-right.
-</p>
+* constant declaration
+  * == identifiers (== constant's names) are bind -- to the -- [constant expressions](#constant_expressions)'s values / 
+    * number of identifiers == number of expressions
+    * nth identifier | left is bound -- to the -- nth expression's value | right
 
-```go
+```text
 ConstDecl      = "const" ( ConstSpec | "(" { ConstSpec ";" } ")" ) .
 ConstSpec      = IdentifierList [ [ Type ] "=" ExpressionList ] .
 
@@ -2265,55 +2261,24 @@ IdentifierList = identifier { "," identifier } .
 ExpressionList = Expression { "," Expression } .
 ```
 
-<p>
-If the type is present, all constants take the type specified, and
-the expressions must be <a href="#Assignability">assignable</a> to that type,
-which must not be a type parameter.
-If the type is omitted, the constants take the
-individual types of the corresponding expressions.
-If the expression values are untyped <a href="#Constants">constants</a>,
-the declared constants remain untyped and the constant identifiers
-denote the constant values. For instance, if the expression is a
-floating-point literal, the constant identifier denotes a floating-point
-constant, even if the literal's fractional part is zero.
-</p>
+* `Type`
+  * OPTIONAL
+  * if it's specified -> 
+    * ALL constants have the SAME type
+    * 👀`Expression` must be [assignable](#assignability) -- to -- that `Type`👀
+  * if it's omitted 
+    * -> EACH constant's type == corresponding expressions's type
+    * & expression values are untyped ->
+      * declared constants remain untyped
+      * constant identifiers == constant values
+  * ⚠️!= type parameter⚠️
 
-<pre>
-const Pi float64 = 3.14159265358979323846
-const zero = 0.0         // untyped floating-point constant
-const (
-	size int64 = 1024
-	eof        = -1  // untyped integer constant
-)
-const a, b, c = 3, 4, "foo"  // a = 3, b = 4, c = "foo", untyped integer and string constants
-const u, v float32 = 0, 3    // u = 0.0, v = 3.0
-</pre>
-
-<p>
-Within a parenthesized <code>const</code> declaration list the
-expression list may be omitted from any but the first ConstSpec.
-Such an empty list is equivalent to the textual substitution of the
-first preceding non-empty expression list and its type if any.
-Omitting the list of expressions is therefore equivalent to
-repeating the previous list.  The number of identifiers must be equal
-to the number of expressions in the previous list.
-Together with the <a href="#Iota"><code>iota</code> constant generator</a>
-this mechanism permits light-weight declaration of sequential values:
-</p>
-
-<pre>
-const (
-	Sunday = iota
-	Monday
-	Tuesday
-	Wednesday
-	Thursday
-	Friday
-	Partyday
-	numberOfDays  // this constant is not exported
-)
-</pre>
-
+* parenthesized const declaration list
+  * requirements
+    * ⚠️first `ConstSpec` MUST have `ExpressionList`⚠️
+  * 👀\+ `iota` constant generator👀
+    * allows
+      * light-weight declaration of sequential values
 
 ## Iota
 
@@ -5452,7 +5417,7 @@ u := make([]byte, 0)
 u0 := (*[0]byte)(u)      // u0 != nil
 </pre>
 
-<h3 id="Constant_expressions">Constant expressions</h3>
+## Constant_expressions
 
 <p>
 Constant expressions may contain only <a href="#Constants">constant</a>
