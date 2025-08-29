@@ -4621,38 +4621,47 @@ x == y+1 &amp;&amp; &lt;-chanInt &gt; 0  // (x == (y+1)) && ((<-chanInt) > 0)
 </pre>
 
 
-<h3 id="Arithmetic_operators">Arithmetic operators</h3>
-<p>
-Arithmetic operators apply to numeric values and yield a result of the same
-type as the first operand. The four standard arithmetic operators (<code>+</code>,
-<code>-</code>, <code>*</code>, <code>/</code>) apply to
-<a href="#Numeric_types">integer</a>, <a href="#Numeric_types">floating-point</a>, and
-<a href="#Numeric_types">complex</a> types; <code>+</code> also applies to <a href="#String_types">strings</a>.
-The bitwise logical and shift operators apply to integers only.
-</p>
+## Arithmetic operators
 
-<pre class="grammar">
-+    sum                    integers, floats, complex values, strings
--    difference             integers, floats, complex values
-*    product                integers, floats, complex values
-/    quotient               integers, floats, complex values
-%    remainder              integers
+* uses
+  * | numeric values
+* 's result type
+  * == first operand's type
 
-&amp;    bitwise AND            integers
-|    bitwise OR             integers
-^    bitwise XOR            integers
-&amp;^   bit clear (AND NOT)    integers
+* standard arithmetic operators (`+`, `-`, `*`, `/`)
+  * uses | types
+    * integer
+    * floating-point
+    * complex
+    * strings
 
-&lt;&lt;   left shift             integer &lt;&lt; integer &gt;= 0
-&gt;&gt;   right shift            integer &gt;&gt; integer &gt;= 0
-</pre>
+* bitwise logical operators (`&`, `|`, ...) & shift operators (`<<` & `>>`)
+  * uses
+    * ONLY | integers
+
+```go
++    // sum                    integers, floats, complex values, strings
+-    // difference             integers, floats, complex values
+*    // product                integers, floats, complex values
+/    // quotient               integers, floats, complex values
+%    // remainder              integers
+
+&amp;    //bitwise AND            integers
+|        //bitwise OR             integers
+^        //bitwise XOR            integers
+&amp;^   //bit clear (AND NOT)    integers
+
+&lt;&lt;   //left shift             integer &lt;&lt; integer &gt;= 0
+&gt;&gt;   //right shift            integer &gt;&gt; integer &gt;= 0
+```
 
 <p>
 If the operand type is a <a href="#Type_parameter_declarations">type parameter</a>,
 the operator must apply to each type in that type set.
 The operands are represented as values of the type argument that the type parameter
 is <a href="#Instantiations">instantiated</a> with, and the operation is computed
-with the precision of that type argument. For example, given the function:
+with the precision of that type argument
+* For example, given the function:
 </p>
 
 <pre>
@@ -5854,86 +5863,60 @@ x--                 x -= 1
 
 ## Assignment statements
 
-<p>
-An <i>assignment</i> replaces the current value stored in a <a href="#Variables">variable</a>
-with a new value specified by an <a href="#Expressions">expression</a>.
-An assignment statement may assign a single value to a single variable, or multiple values to a
-matching number of variables.
-</p>
+* assignment
+  * requirements
+    * ⚠️declare PREVIOUSLY the variable⚠️
+  * variable's CURRENT value is replaced -- by -- expression's NEW value
 
-<pre class="ebnf">
+* assignment statement
+  * may assign 
+    * 1 value -- to a -- 1 variable OR
+    * 👀MULTIPLE values -- to a -- MULTIPLE variables👀
+
+```go
 Assignment = ExpressionList assign_op ExpressionList .
 
 assign_op = [ add_op | mul_op ] "=" .
-</pre>
+```
 
-<p>
-Each left-hand side operand must be <a href="#Address_operators">addressable</a>,
-a map index expression, or (for <code>=</code> assignments only) the
-<a href="#Blank_identifier">blank identifier</a>.
-Operands may be parenthesized.
-</p>
+* left-hand side operand
+  * must be
+    * [addressable](#address-operators)
+    * map index expression, OR
+    * [`_`](#blank-identifier----_---)
+      * ONLY valid | assignments
 
-<pre>
-x = 1
-*p = f()
-a[i] = 23
-(k) = &lt;-ch  // same as: k = &lt;-ch
-</pre>
+* operands
+  * may be parenthesized
 
-<p>
-An <i>assignment operation</i> <code>x</code> <i>op</i><code>=</code>
-<code>y</code> where <i>op</i> is a binary <a href="#Arithmetic_operators">arithmetic operator</a>
-is equivalent to <code>x</code> <code>=</code> <code>x</code> <i>op</i>
-<code>(y)</code> but evaluates <code>x</code>
-only once.  The <i>op</i><code>=</code> construct is a single token.
-In assignment operations, both the left- and right-hand expression lists
-must contain exactly one single-valued expression, and the left-hand
-expression must not be the blank identifier.
-</p>
+* `x op= y` -- 💡assignment operation💡 
+  * requirements
+    * `x` & `y` must be 1 single-valued expression
+    * ❌`x` must NOT be [`_`](#blank-identifier----_---)❌
+  * `op=`
+    * == 👀1! token👀
+      * == compiler handles as 1! operator
+  * `op`
+    * == binary [arithmetic operator](#arithmetic-operators)
+  * == 👀`x = x op (y)`👀 / ⚠️`x` is evaluated 1!⚠️
+  * _Example:_
+    ```go
+    x += 5          // ==       x = x+5
+    x *= 2          // ==       x = x*2
+    ```
 
-<pre>
-a[i] &lt;&lt;= 2
-i &amp;^= 1&lt;&lt;n
-</pre>
+* tuple assignment
+  * multi-valued operation's individual elements are assigned -- to a -- list of variables
+  * ways
+    * right hand operand == single multi-valued expression
+      * _Examples:_ function call, channel, map operation, type assertion
+    * number of operands | left == number of expressions | right
 
-<p>
-A tuple assignment assigns the individual elements of a multi-valued
-operation to a list of variables.  There are two forms.  In the
-first, the right hand operand is a single multi-valued expression
-such as a function call, a <a href="#Channel_types">channel</a> or
-<a href="#Map_types">map</a> operation, or a <a href="#Type_assertions">type assertion</a>.
-The number of operands on the left
-hand side must match the number of values.  For instance, if
-<code>f</code> is a function returning two values,
-</p>
+* [`_`](#blank-identifier----_---)
+  * allows
+    * ignore assignment's right-hand side values
 
-<pre>
-x, y = f()
-</pre>
-
-<p>
-assigns the first value to <code>x</code> and the second to <code>y</code>.
-In the second form, the number of operands on the left must equal the number
-of expressions on the right, each of which must be single-valued, and the
-<i>n</i>th expression on the right is assigned to the <i>n</i>th
-operand on the left:
-</p>
-
-<pre>
-one, two, three = '一', '二', '三'
-</pre>
-
-<p>
-The <a href="#Blank_identifier">blank identifier</a> provides a way to
-ignore right-hand side values in an assignment:
-</p>
-
-<pre>
-_ = x       // evaluate x but ignore it
-x, _ = f()  // evaluate f() but ignore second result value
-</pre>
-
+* TODO:
 <p>
 The assignment proceeds in two phases.
 First, the operands of <a href="#Index_expressions">index expressions</a>
