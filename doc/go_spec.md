@@ -2358,11 +2358,11 @@ of the last non-empty expression list.
 * alias declaration
   * binds an identifier -- to the -- given type
     * [Go 1.9](#go-19)
-  ```
+  ```text
   AliasDecl = identifier "=" Type 
   ```
 
-```
+```text
 type (
 	nodeList = []*Node  // nodeList type == []*Node type
 	Polar    = polar    // Polar type == polar type
@@ -3144,35 +3144,19 @@ noteFrequency := map[string]float32{
 
 ## Function literals
 
-<p>
-A function literal represents an anonymous <a href="#Function_declarations">function</a>.
-Function literals cannot declare type parameters.
-</p>
+* function literal
+  * == anonymous [function](#function-declarations)
+  * ❌can NOT declare type parameters❌
+  * uses
+    * assign -- to a -- variable
+    * invoke DIRECTLY
 
-<pre class="ebnf">
+* closures
+  * := literal functions / 👀can access variables defined | surrounding function👀
+
+```text
 FunctionLit = "func" Signature FunctionBody .
-</pre>
-
-<pre>
-func(a, b int, z float64) bool { return a*b &lt; int(z) }
-</pre>
-
-<p>
-A function literal can be assigned to a variable or invoked directly.
-</p>
-
-<pre>
-f := func(x, y int) int { return x + y }
-func(ch chan int) { ch &lt;- ACK }(replyChan)
-</pre>
-
-<p>
-Function literals are <i>closures</i>: they may refer to variables
-defined in a surrounding function. Those variables are then shared between
-the surrounding function and the function literal, and they survive as long
-as they are accessible.
-</p>
-
+```
 
 ## Primary expressions
 
