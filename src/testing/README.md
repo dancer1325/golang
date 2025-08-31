@@ -71,10 +71,11 @@
       ```go
       func Example() { ... }
       ```
-    * function
+    * public function
       ```go
       func ExampleFunctionName() { ... }
       ```
+      * ❌if function != public -> NOT possible testing❌ 
       * if you want to provide >1 examples -> add the suffix "_anotherThing"
         ```go
         func ExampleFunctionName_anotherThing() { ... }
