@@ -799,7 +799,7 @@ If a variable has not yet been assigned a value, its value is the
 * type
   * == 👀set of values together + operations + values' methods👀
 
-```
+```text
 Type      = TypeName [ TypeArgs ] | TypeLit | "(" Type ")" .
   # if the type is generic -> specify [ TypeArgs ]
   # TypeLit == type -- from -- EXISTING types
@@ -1049,7 +1049,7 @@ Moreover, the inner slices must be initialized individually.
     * EACH field == name + type
     * ⚠️NON-[blank](#blank-identifier----_---) field names MUST be [unique](#uniqueness-of-identifiers) | EACH struct⚠️
 
-```go
+```text
 StructType    = "struct" "{" { FieldDecl ";" } "}" .
 FieldDecl     = (IdentifierList Type | EmbeddedField) [ Tag ] .
 	// IdentifierList  ==  explicitly    OR  EmbeddedField  ==  implicitly 
@@ -1152,7 +1152,7 @@ type (
 * := ALL functions / SAME parameter & result types
 * function type variable uninitialized 's value == `nil`
 
-```go
+```text
 FunctionType   = "func" Signature .
 Signature      = Parameters [ Result ] .
 Result         = Parameters | Type .
@@ -1814,104 +1814,58 @@ operations that read from a sequence of bytes, which may be a byte slice or a st
 
 ## Type identity
 
-<p>
-Two types are either <i>identical</i> or <i>different</i>.
-</p>
+* 2 types can be
+  * identical OR
+    * ⚠️!= [assignable](#assignability)⚠️
+  * different
 
-<p>
-A <a href="#Types">named type</a> is always different from any other type.
-Otherwise, two types are identical if their <a href="#Types">underlying</a> type literals are
-structurally equivalent; that is, they have the same literal structure and corresponding
-components have identical types. In detail:
-</p>
-
-<ul>
-	<li>Two array types are identical if they have identical element types and
-	    the same array length.</li>
-
-	<li>Two slice types are identical if they have identical element types.</li>
-
-	<li>Two struct types are identical if they have the same sequence of fields,
-	    and if corresponding fields have the same names, and identical types,
-	    and identical tags.
-	    <a href="#Exported_identifiers">Non-exported</a> field names from different
-	    packages are always different.</li>
-
-	<li>Two pointer types are identical if they have identical base types.</li>
-
-	<li>Two function types are identical if they have the same number of parameters
-	    and result values, corresponding parameter and result types are
-	    identical, and either both functions are variadic or neither is.
-	    Parameter and result names are not required to match.</li>
-
-	<li>Two interface types are identical if they define the same type set.
-	</li>
-
-	<li>Two map types are identical if they have identical key and element types.</li>
-
-	<li>Two channel types are identical if they have identical element types and
-	    the same direction.</li>
-
-	<li>Two <a href="#Instantiations">instantiated</a> types are identical if
-	    their defined types and all type arguments are identical.
-	</li>
-</ul>
-
-<p>
-Given the declarations
-</p>
-
-<pre>
-type (
-	A0 = []string
-	A1 = A0
-	A2 = struct{ a, b int }
-	A3 = int
-	A4 = func(A3, float64) *A0
-	A5 = func(x int, _ float64) *[]string
-
-	B0 A0
-	B1 []string
-	B2 struct{ a, b int }
-	B3 struct{ a, c int }
-	B4 func(int, float64) *B0
-	B5 func(x int, y float64) *A1
-
-	C0 = B0
-	D0[P1, P2 any] struct{ x P1; y P2 }
-	E0 = D0[int, string]
-)
-</pre>
-
-<p>
-these types are identical:
-</p>
-
-<pre>
-A0, A1, and []string
-A2 and struct{ a, b int }
-A3 and int
-A4, func(int, float64) *[]string, and A5
-
-B0 and C0
-D0[int, string] and E0
-[]int and []int
-struct{ a, b *B5 } and struct{ a, b *B5 }
-func(x int, y float64) *[]string, func(int, float64) (result *[]string), and A5
-</pre>
-
-<p>
-<code>B0</code> and <code>B1</code> are different because they are new types
-created by distinct <a href="#Type_definitions">type definitions</a>;
-<code>func(int, float64) *B0</code> and <code>func(x int, y float64) *[]string</code>
-are different because <code>B0</code> is different from <code>[]string</code>;
-and <code>P1</code> and <code>P2</code> are different because they are different
-type parameters.
-<code>D0[int, string]</code> and <code>struct{ x int; y string }</code> are
-different because the former is an <a href="#Instantiations">instantiated</a>
-defined type while the latter is a type literal
-(but they are still <a href="#Assignability">assignable</a>).
-</p>
+* [named type](#types)
+  * if Type1's underlying type literals' structural == Type2's underlying type literals' structural 
+    * == Type1's literal structure + 's components == Type2's literal structure + 's components
+    * -> 💡Type 1 -- identical to -- Type2💡
+    * use cases
+      * | array types
+        * requirements
+          * identical element types
+          * same array length
+      * | slice types
+        * requirements
+          * identical element types
+      * | struct types
+        * requirements
+          * SAME sequence of fields,
+          * SAME [exported](#exported-identifiers) field's
+            * names,
+            * identical types,
+            * identical tags
+            * Reason of exported: 🧠package1's NON-exported field != (ALWAYS) package2's NON-exported field🧠
+      * | pointer types
+        * requirements
+          * identical base types
+      * | function types
+        * requirements
+          * SAME 
+            * number of
+              * parameters
+              * result values,
+            * identical 
+              * parameter types
+              * result types
+          * BOTH are variadic or NEITHER
+      * | interface types
+        * requirements
+          * SAME type set
+      * | map types
+        * requirements
+          * identical key & element types
+      * | channel types
+        * requirements
+          * identical element types
+          * SAME direction
+      * | [instantiated types](#instantiations)
+        * requirements
+          * identical defined types
+          * identical ALL type arguments
 
 ## Assignability
 
@@ -2348,7 +2302,7 @@ of the last non-empty expression list.
   * forms
     * alias declarations
     * type definitions
-  ```
+  ```text
   TypeDecl = "type" ( TypeSpec | "(" { TypeSpec ";" } ")" ) 
   TypeSpec = AliasDecl | TypeDef
   ```
@@ -2371,40 +2325,21 @@ type (
 
 ### Type definitions
 
-<p>
-A type definition creates a new, distinct type with the same
-<a href="#Underlying_types">underlying type</a> and operations as the given type
-and binds an identifier, the <i>type name</i>, to it.
-</p>
+* == defined type
 
-<pre class="ebnf">
+* == type 
+  * NEW
+  * ⚠️!= `Type`⚠️
+    * == != [type identity](#type-identity)
+    * /
+      * SAME [underlying type](#underlying-types)
+      * SAME operations
+
+```text
 TypeDef = identifier [ TypeParameters ] Type .
-</pre>
+```
 
-<p>
-The new type is called a <i>defined type</i>.
-It is <a href="#Type_identity">different</a> from any other type,
-including the type it is created from.
-</p>
-
-<pre>
-type (
-	Point struct{ x, y float64 }  // Point and struct{ x, y float64 } are different types
-	polar Point                   // polar and Point denote different types
-)
-
-type TreeNode struct {
-	left, right *TreeNode
-	value any
-}
-
-type Block interface {
-	BlockSize() int
-	Encrypt(src, dst []byte)
-	Decrypt(src, dst []byte)
-}
-</pre>
-
+* TODO:
 <p>
 A defined type may have <a href="#Method_declarations">methods</a> associated with it.
 It does not inherit any methods bound to the given type,
